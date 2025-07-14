@@ -1,0 +1,189 @@
+{
+  "name": "Casino Yayıncısı - BERAT K",
+  "short_name": "BERAT K Casino",
+  "description": "Profesyonel casino yayıncısı ve dijital pazarlama uzmanı. 5+ yıllık deneyim ile YouTube, Twitch yayınları ve casino stratejileri.",
+  "version": "1.0.0",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#021526",
+  "background_color": "#021526",
+  "lang": "tr-TR",
+  "dir": "ltr",
+  "categories": [
+    "entertainment",
+    "games",
+    "education",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "/assets/images/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/images/screenshot-mobile-1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Casino Yayıncısı Ana Sayfa"
+    },
+    {
+      "src": "/assets/images/screenshot-mobile-2.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Hizmetler ve Portfolio"
+    },
+    {
+      "src": "/assets/images/screenshot-desktop-1.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop Casino Portfolio"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Canlı Yayınlar",
+      "short_name": "Yayınlar",
+      "description": "YouTube ve Twitch canlı yayınları",
+      "url": "/pages/gallery.php#live-streams",
+      "icons": [
+        {
+          "src": "/assets/images/icon-play.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Hizmetlerimiz",
+      "short_name": "Hizmetler",
+      "description": "Dijital pazarlama ve casino hizmetleri",
+      "url": "/pages/services.php",
+      "icons": [
+        {
+          "src": "/assets/images/icon-services.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "İletişim",
+      "short_name": "İletişim",
+      "description": "Bizimle iletişime geçin",
+      "url": "/pages/contact.php",
+      "icons": [
+        {
+          "src": "/assets/images/icon-contact.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Portfolio",
+      "short_name": "Projeler",
+      "description": "Başarılı projelerimizi inceleyin",
+      "url": "/pages/portfolio.php",
+      "icons": [
+        {
+          "src": "/assets/images/icon-portfolio.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.beratk.casino",
+      "id": "com.beratk.casino"
+    }
+  ],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/pages/contact.php",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "subject",
+      "text": "message",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+casino",
+      "url": "/pages/services.php?game=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "file_handlers": [
+    {
+      "action": "/pages/contact.php",
+      "accept": {
+        "image/*": [".png", ".jpg", ".jpeg", ".gif", ".webp"],
+        "video/*": [".mp4", ".webm", ".mov"],
+        "application/pdf": [".pdf"]
+      }
+    }
+  ],
+  "handle_links": "preferred",
+  "capture_links": "existing-client-navigate"
+}

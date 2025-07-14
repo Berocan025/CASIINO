@@ -364,13 +364,64 @@ Bu proje BERAT K tarafından geliştirilmiş olup, tüm hakları saklıdır.
 - ✅ SEO optimize
 - ✅ Sosyal medya entegrasyonu
 - ✅ İletişim form sistemi
+- ✅ Newsletter sistemi (e-posta onaylı)
+- ✅ PWA desteği (mobil uygulama deneyimi)
+- ✅ Service Worker (offline kullanım)
+- ✅ Push notifications
+- ✅ Background sync
+- ✅ GDPR uyumlu abonelik iptali
 - ✅ Galeri yönetimi
 - ✅ Portföy showcase
 - ✅ Casino teması
 - ✅ cPanel uyumlu
 - ✅ SQLite veritabanı
 
+## 🔗 **Önemli Linkler**
+
+- **Ana Sayfa:** `index.php`
+- **Admin Panel:** `admin/login.php` (admin/admin123)
+- **API Endpoints:** `/api/contact-form.php`, `/api/newsletter.php`
+- **Newsletter Onay:** `newsletter-confirm.php`
+- **Abonelik İptal:** `unsubscribe.php`
+- **PWA Manifest:** `manifest.json`
+- **Service Worker:** `sw.js`
+- **Offline Sayfa:** `offline.html`
+- **Veritabanı:** `database/casino_portfolio.db`
+
+## 🎯 **Son Eklenen Özellikler**
+
+### PWA (Progressive Web App)
+- 📱 **Mobil Uygulama Deneyimi:** Ana ekrana eklenebilir ikon
+- 🔄 **Service Worker:** Otomatik önbellekleme ve offline kullanım
+- 📵 **Offline Sayfa:** İnternet olmadan bile temel sayfalara erişim
+- 🔔 **Push Notifications:** Canlı yayın ve içerik bildirimleri
+- ⚡ **Background Sync:** Çevrimdışı form gönderimlerini senkronize etme
+
+### Newsletter Sistemi
+- 📧 **E-posta Onaylı Abonelik:** Güvenli newsletter sistemi
+- ✉️ **HTML E-posta Şablonları:** Profesyonel e-posta tasarımları
+- 🎯 **GDPR Uyumlu:** Kolay abonelik iptal sistemi
+- 📊 **Admin Paneli Entegrasyonu:** Abone yönetimi
+
+### Güvenlik & Performance
+- 🛡️ **Rate Limiting:** Form spam koruması
+- 🔒 **CSRF Protection:** Cross-site request forgery koruması
+- ⚡ **Caching Strategy:** Akıllı önbellekleme sistemi
+- 📈 **Performance Monitoring:** Yavaş API çağrı takibi
+
 ---
+
+## 🎰 **BERAT K - Casino Yayıncısı için özel tasarlanmıştır**
+
+5+ yıllık casino deneyimi ile profesyonel dijital pazarlama hizmetleri.
+
+**Hizmetlerimiz:**
+- 📺 YouTube Yayın Yönetimi
+- 💬 Telegram Kanal Yönetimi
+- 📱 Sosyal Medya Pazarlaması
+- 🎯 Meta Ads Kampanyaları
+- 📧 SMS & E-posta Pazarlaması
+- ⚙️ Panel Optimizasyonu
 
 **© 2024 Casino Yayıncısı - BERAT K | Tüm hakları saklıdır.**
 

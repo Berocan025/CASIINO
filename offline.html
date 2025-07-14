@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çevrimdışı - Casino Yayıncısı BERAT K</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #021526 0%, #6f42c1 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .offline-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        .offline-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .offline-message {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .offline-suggestions {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .offline-suggestions h3 {
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .offline-suggestions ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .offline-suggestions li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .offline-suggestions li:before {
+            content: '🎰';
+            position: absolute;
+            left: 0;
+        }
+
+        .retry-button {
+            background: linear-gradient(45deg, #6f42c1, #e91e63);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .retry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-links {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .cached-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .cached-content h4 {
+            color: #4ecdc4;
+            margin-bottom: 1rem;
+        }
+
+        .cached-pages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cached-page {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .cached-page:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        .connection-status.online {
+            background: rgba(0, 255, 0, 0.8);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .offline-title {
+                font-size: 2rem;
+            }
+            
+            .offline-container {
+                padding: 1rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cached-pages {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-status" id="connectionStatus">
+        🔴 Çevrimdışı
+    </div>
+
+    <div class="offline-container">
+        <div class="offline-icon">🎰📡</div>
+        
+        <h1 class="offline-title">Bağlantı Yok</h1>
+        
+        <p class="offline-message">
+            Üzgünüz, şu anda internet bağlantınız yok gibi görünüyor. 
+            Ancak endişelenmeyin! Size yardımcı olabilecek birkaç seçeneğiniz var.
+        </p>
+
+        <div class="offline-suggestions">
+            <h3>🔧 Ne Yapabilirsiniz?</h3>
+            <ul>
+                <li>İnternet bağlantınızı kontrol edin</li>
+                <li>Wi-Fi veya mobil verilerinizi yeniden açın</li>
+                <li>Sayfayı yenilemeyi deneyin</li>
+                <li>Birkaç dakika bekleyip tekrar deneyin</li>
+                <li>Sosyal medya hesaplarımızdan takip edin</li>
+            </ul>
+        </div>
+
+        <button class="retry-button" onclick="retryConnection()">
+            🔄 Tekrar Dene
+        </button>
+        
+        <a href="/" class="retry-button">
+            🏠 Ana Sayfa
+        </a>
+
+        <div class="cached-content">
+            <h4>📄 Çevrimdışı Erişilebilir Sayfalar</h4>
+            <p>Bu sayfalar daha önce önbelleğe alındı ve çevrimdışıyken görüntülenebilir:</p>
+            
+            <div class="cached-pages" id="cachedPages">
+                <a href="/index.php" class="cached-page">
+                    <strong>🏠 Ana Sayfa</strong><br>
+                    <small>Casino yayıncısı profili</small>
+                </a>
+                <a href="/pages/about.php" class="cached-page">
+                    <strong>👤 Hakkımda</strong><br>
+                    <small>5+ yıllık deneyim</small>
+                </a>
+                <a href="/pages/services.php" class="cached-page">
+                    <strong>⚡ Hizmetler</strong><br>
+                    <small>Dijital pazarlama</small>
+                </a>
+                <a href="/pages/portfolio.php" class="cached-page">
+                    <strong>💼 Portfolio</strong><br>
+                    <small>Başarılı projeler</small>
+                </a>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="https://youtube.com/@beratk" class="social-link" target="_blank">
+                📺 YouTube
+            </a>
+            <a href="https://twitch.tv/beratk" class="social-link" target="_blank">
+                🎮 Twitch
+            </a>
+            <a href="https://instagram.com/beratk_casino" class="social-link" target="_blank">
+                📸 Instagram
+            </a>
+            <a href="https://t.me/beratk_casino" class="social-link" target="_blank">
+                💬 Telegram
+            </a>
+        </div>
+
+        <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem;">
+            Bu sayfa çevrimdışı kullanım için tasarlanmıştır.<br>
+            <strong>Casino Yayıncısı - BERAT K</strong> © 2024
+        </p>
+    </div>
+
+    <script>
+        // Connection status monitoring
+        function updateConnectionStatus() {
+            const statusElement = document.getElementById('connectionStatus');
+            
+            if (navigator.onLine) {
+                statusElement.textContent = '🟢 Çevrimiçi';
+                statusElement.classList.add('online');
+                
+                // Auto-redirect to main site when back online
+                setTimeout(() => {
+                    if (navigator.onLine) {
+                        window.location.href = '/';
+                    }
+                }, 2000);
+            } else {
+                statusElement.textContent = '🔴 Çevrimdışı';
+                statusElement.classList.remove('online');
+            }
+        }
+
+        // Retry connection function
+        function retryConnection() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '🔄 Kontrol Ediliyor...';
+            button.disabled = true;
+            
+            // Check connection
+            fetch('/', { method: 'HEAD', cache: 'no-cache' })
+                .then(() => {
+                    button.innerHTML = '✅ Bağlandı!';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                })
+                .catch(() => {
+                    button.innerHTML = '❌ Hala Çevrimdışı';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 2000);
+                });
+        }
+
+        // Check for cached pages in Service Worker
+        function loadCachedPages() {
+            if ('caches' in window) {
+                caches.open('static-v1').then(cache => {
+                    cache.keys().then(requests => {
+                        const cachedPagesDiv = document.getElementById('cachedPages');
+                        const existingPages = cachedPagesDiv.innerHTML;
+                        
+                        const additionalPages = requests
+                            .filter(req => req.url.includes('.php') && !req.url.includes('admin'))
+                            .slice(0, 6) // Limit to 6 pages
+                            .map(req => {
+                                const url = new URL(req.url);
+                                const path = url.pathname;
+                                const pageName = path.split('/').pop().replace('.php', '');
+                                
+                                return `
+                                    <a href="${path}" class="cached-page">
+                                        <strong>📄 ${pageName}</strong><br>
+                                        <small>Önbelleğe alındı</small>
+                                    </a>
+                                `;
+                            })
+                            .join('');
+                        
+                        if (additionalPages) {
+                            cachedPagesDiv.innerHTML = existingPages + additionalPages;
+                        }
+                    });
+                });
+            }
+        }
+
+        // Event listeners
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        window.addEventListener('load', () => {
+            updateConnectionStatus();
+            loadCachedPages();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'r':
+                        e.preventDefault();
+                        retryConnection();
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        window.location.href = '/';
+                        break;
+                }
+            }
+        });
+
+        // Periodic connection check
+        setInterval(() => {
+            if (!navigator.onLine) {
+                // Try to fetch a small resource to check connection
+                fetch('/favicon.ico', { 
+                    method: 'HEAD', 
+                    cache: 'no-cache',
+                    signal: AbortSignal.timeout(5000)
+                }).then(() => {
+                    // Connection restored
+                    updateConnectionStatus();
+                }).catch(() => {
+                    // Still offline
+                });
+            }
+        }, 30000); // Check every 30 seconds
+
+        // Add some interactivity
+        document.querySelectorAll('.cached-page').forEach(page => {
+            page.addEventListener('click', (e) => {
+                // Add loading state
+                e.target.style.opacity = '0.7';
+                e.target.innerHTML += '<br><small>⏳ Yükleniyor...</small>';
+            });
+        });
+
+        // Easter egg for casino theme
+        let clickCount = 0;
+        document.querySelector('.offline-icon').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                document.querySelector('.offline-icon').innerHTML = '🎰💎🎲';
+                document.body.style.animation = 'pulse 0.5s ease';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                    document.querySelector('.offline-icon').innerHTML = '🎰📡';
+                    clickCount = 0;
+                }, 2000);
+            }
+        });
+
+        console.log('🎰 Offline page loaded - BERAT K Casino Portfolio');
+    </script>
+</body>
+</html>

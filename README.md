@@ -98,6 +98,43 @@ Bu proje, casino yayıncılığı ve dijital pazarlama hizmetleri sunan profesyo
 - GD extension (resim işlemleri için)
 - mod_rewrite (Apache için)
 
+### Kurulum Adımları
+
+1. **Depoyu klonlayın:**
+```bash
+git clone https://github.com/username/casino-portfolio.git
+cd casino-portfolio
+```
+
+2. **Veritabanını başlatın:**
+```bash
+php init_database.php
+```
+
+3. **Web sunucusunu başlatın:**
+```bash
+php -S localhost:8000
+```
+
+4. **Tarayıcıda açın:** `http://localhost:8000`
+
+## 🔐 Admin Paneli
+
+Admin paneline erişim için:
+- **URL**: `/admin/login.php`
+- **Kullanıcı Adı**: `admin`
+- **Şifre**: `admin123`
+
+### Admin Özellikleri:
+- ✅ **Sayfa Yönetimi**: İçerik sayfalarını düzenle
+- ✅ **Hizmet Yönetimi**: Hizmetleri ekle/düzenle/sil (drag & drop sıralama)
+- ✅ **Portföy Yönetimi**: Projeleri resim upload ile yönet
+- ✅ **Galeri Yönetimi**: Görselleri yönet (drag & drop)
+- ✅ **Mesaj Yönetimi**: İletişim formundan gelen mesajları görüntüle
+- ✅ **Ayarlar**: Site ayarlarını düzenle
+- ✅ **Güvenlik**: CSRF koruması, rate limiting, input sanitization
+- ✅ **Responsive**: Mobil uyumlu admin paneli
+
 ### Adım Adım Kurulum
 
 1. **Dosyaları Sunucuya Yükleyin**

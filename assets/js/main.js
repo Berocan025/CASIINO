@@ -1,617 +1,855 @@
-/**
+/*!
  * Casino Portfolio Website - Main JavaScript
  * Geliştirici: BERAT K
- * Main JavaScript file for interactive features and animations
+ * Main JS file with animations, interactions, and form handling
  */
 
-(function($) {
+(function() {
     'use strict';
 
     // Global variables
-    let isLoading = true;
-    let scrollPosition = 0;
+    let isScrolled = false;
+    let lastScrollTop = 0;
+    let ticking = false;
 
-    // Document ready
-    $(document).ready(function() {
-        initializeWebsite();
-    });
-
-    // Window load
-    $(window).on('load', function() {
-        hideLoadingSpinner();
-        initializeAnimations();
-    });
-
-    /**
-     * Initialize website functionality
-     */
-    function initializeWebsite() {
-        // Initialize components
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
         initializeNavigation();
-        initializeScrollToTop();
-        initializeScrollEffects();
+        initializeHeroSlider();
+        initializeAnimations();
         initializeCounters();
-        initializeLightbox();
-        initializeContactForm();
-        initializeNewsletterForm();
-        initializeLazyLoading();
-        initializeSmoothScrolling();
+        initializeForms();
+        initializeModals();
+        initializePortfolioFilter();
+        initializeGallery();
+        initializeScrollEffects();
+        initializePreloader();
         
-        // Set up event listeners
-        setupEventListeners();
-        
-        console.log('Casino Portfolio Website initialized - Geliştirici: BERAT K');
-    }
+        console.log('🎰 Casino Portfolio Website - JavaScript Initialized');
+    });
 
-    /**
-     * Hide loading spinner
-     */
-    function hideLoadingSpinner() {
-        const spinner = document.getElementById('loading-spinner');
-        if (spinner) {
-            spinner.style.opacity = '0';
-            setTimeout(() => {
-                spinner.style.display = 'none';
-                isLoading = false;
-            }, 500);
-        }
-    }
-
-    /**
-     * Initialize navigation functionality
-     */
+    // ==========================================
+    // NAVIGATION
+    // ==========================================
+    
     function initializeNavigation() {
-        // Header scroll effect
-        $(window).scroll(function() {
-            const header = $('.header');
-            if ($(this).scrollTop() > 100) {
-                header.addClass('scrolled');
-            } else {
-                header.removeClass('scrolled');
-            }
-        });
+        const navbar = document.querySelector('.navbar');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-        // Mobile menu close on link click
-        $('.navbar-nav .nav-link').on('click', function() {
-            if ($(window).width() < 992) {
-                $('.navbar-collapse').collapse('hide');
-            }
-        });
-
-        // Active menu item highlighting
-        updateActiveMenuItem();
-        $(window).scroll(updateActiveMenuItem);
-    }
-
-    /**
-     * Update active menu item based on scroll position
-     */
-    function updateActiveMenuItem() {
-        const scrollPos = $(window).scrollTop() + 100;
-        
-        $('.navbar-nav .nav-link').each(function() {
-            const link = $(this);
-            const href = link.attr('href');
+        // Navbar scroll effect
+        function handleNavbarScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            if (href && href.startsWith('#')) {
-                const section = $(href);
-                if (section.length && 
-                    section.offset().top <= scrollPos && 
-                    section.offset().top + section.outerHeight() > scrollPos) {
-                    $('.navbar-nav .nav-link').removeClass('active');
-                    link.addClass('active');
+            if (scrollTop > 100 && !isScrolled) {
+                navbar.classList.add('scrolled');
+                isScrolled = true;
+            } else if (scrollTop <= 100 && isScrolled) {
+                navbar.classList.remove('scrolled');
+                isScrolled = false;
+            }
+        }
+
+        // Smooth scroll for navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    
+                    if (target) {
+                        const headerOffset = 100;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open
+                        if (navbarCollapse.classList.contains('show')) {
+                            navbarToggler.click();
+                        }
+
+                        // Update active state
+                        updateActiveNavLink(href);
+                    }
                 }
-            }
-        });
-    }
-
-    /**
-     * Initialize scroll to top button
-     */
-    function initializeScrollToTop() {
-        const scrollTopBtn = $('#btnScrollTop');
-        
-        // Show/hide button based on scroll position
-        $(window).scroll(function() {
-            if ($(this).scrollTop() > 300) {
-                scrollTopBtn.fadeIn();
-            } else {
-                scrollTopBtn.fadeOut();
-            }
-        });
-
-        // Scroll to top functionality
-        scrollTopBtn.on('click', function(e) {
-            e.preventDefault();
-            $('html, body').animate({
-                scrollTop: 0
-            }, 800, 'easeInOutQuart');
-        });
-    }
-
-    /**
-     * Initialize scroll effects and parallax
-     */
-    function initializeScrollEffects() {
-        // Parallax effect for hero section
-        $(window).scroll(function() {
-            const scrolled = $(this).scrollTop();
-            const parallaxElements = $('.hero-bg');
-            
-            parallaxElements.each(function() {
-                const speed = 0.5;
-                const yPos = -(scrolled * speed);
-                $(this).css('transform', `translateY(${yPos}px)`);
             });
         });
 
-        // Reveal animations on scroll
+        // Active navigation link based on scroll position
+        function updateActiveNavLink(targetId = null) {
+            if (targetId) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === targetId) {
+                        link.classList.add('active');
+                    }
+                });
+                return;
+            }
+
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.pageYOffset + 150;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Throttled scroll event
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    handleNavbarScroll();
+                    updateActiveNavLink();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Mobile menu auto-close on outside click
+        document.addEventListener('click', function(e) {
+            if (!navbar.contains(e.target) && navbarCollapse.classList.contains('show')) {
+                navbarToggler.click();
+            }
+        });
+    }
+
+    // ==========================================
+    // HERO SLIDER
+    // ==========================================
+    
+    function initializeHeroSlider() {
+        const sliders = document.querySelectorAll('.hero-slider');
+        
+        sliders.forEach(slider => {
+            // Initialize Bootstrap carousel if present
+            if (window.bootstrap && slider.classList.contains('carousel')) {
+                new bootstrap.Carousel(slider, {
+                    interval: 5000,
+                    ride: 'carousel',
+                    pause: 'hover'
+                });
+            }
+        });
+
+        // Custom hero animations
+        const heroElements = document.querySelectorAll('.hero-title, .hero-description, .hero-buttons');
+        heroElements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                element.style.transition = 'all 0.8s ease';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, index * 200 + 500);
+        });
+    }
+
+    // ==========================================
+    // ANIMATIONS
+    // ==========================================
+    
+    function initializeAnimations() {
+        // Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver(function(entries) {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in-up');
-                    observer.unobserve(entry.target);
+                    const element = entry.target;
+                    element.classList.add('animate-in');
+                    
+                    // Trigger specific animations
+                    if (element.classList.contains('counter')) {
+                        animateCounter(element);
+                    }
+                    
+                    if (element.classList.contains('progress-bar')) {
+                        animateProgressBar(element);
+                    }
+                    
+                    observer.unobserve(element);
                 }
             });
         }, observerOptions);
 
         // Observe elements for animation
-        document.querySelectorAll('.service-card, .portfolio-card, .stat-card, .gallery-item').forEach(el => {
-            observer.observe(el);
+        const animateElements = document.querySelectorAll([
+            '.card', '.service-card', '.portfolio-card', '.gallery-item',
+            '.stat-card', '.testimonial-card', '.contact-card',
+            '.section-title', '.section-description'
+        ].join(', '));
+
+        animateElements.forEach(element => {
+            element.classList.add('animate-element');
+            observer.observe(element);
+        });
+
+        // Parallax effect for hero background
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.5;
+                
+                if (scrolled < window.innerHeight) {
+                    heroSection.style.transform = `translateY(${rate}px)`;
+                }
+            });
+        }
+    }
+
+    // ==========================================
+    // COUNTERS
+    // ==========================================
+    
+    function initializeCounters() {
+        const counters = document.querySelectorAll('[data-count]');
+        
+        counters.forEach(counter => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(counter);
         });
     }
 
-    /**
-     * Initialize counter animations
-     */
-    function initializeCounters() {
-        const counters = $('.stat-number[data-count]');
-        let hasAnimated = false;
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-count'));
+        const duration = parseInt(element.getAttribute('data-duration')) || 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            
+            // Format number based on content
+            const text = element.textContent;
+            if (text.includes('K')) {
+                element.textContent = Math.floor(current / 1000) + 'K+';
+            } else if (text.includes('M')) {
+                element.textContent = Math.floor(current / 1000000) + 'M+';
+            } else if (text.includes('%')) {
+                element.textContent = Math.floor(current) + '%';
+            } else {
+                element.textContent = Math.floor(current).toLocaleString('tr-TR');
+            }
+        }, 16);
+    }
 
-        const countObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !hasAnimated) {
-                    hasAnimated = true;
-                    animateCounters();
-                }
-            });
-        }, { threshold: 0.5 });
+    function animateProgressBar(element) {
+        const percentage = element.getAttribute('data-percentage') || 0;
+        element.style.width = '0%';
+        
+        setTimeout(() => {
+            element.style.transition = 'width 1.5s ease-in-out';
+            element.style.width = percentage + '%';
+        }, 200);
+    }
 
-        if (document.querySelector('.statistics-section')) {
-            countObserver.observe(document.querySelector('.statistics-section'));
+    // ==========================================
+    // FORMS
+    // ==========================================
+    
+    function initializeForms() {
+        const contactForm = document.getElementById('contactForm');
+        const newsletterForm = document.getElementById('newsletterForm');
+        
+        if (contactForm) {
+            initializeContactForm(contactForm);
+        }
+        
+        if (newsletterForm) {
+            initializeNewsletterForm(newsletterForm);
         }
 
-        function animateCounters() {
-            counters.each(function() {
-                const counter = $(this);
-                const target = counter.attr('data-count');
-                const numTarget = parseInt(target.replace(/[^0-9]/g, ''));
-                const suffix = target.replace(/[0-9]/g, '');
+        // Form field animations
+        const formControls = document.querySelectorAll('.form-control');
+        formControls.forEach(control => {
+            control.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            control.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+        });
+    }
+
+    function initializeContactForm(form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Gönderiliyor...';
+            
+            // Clear previous errors
+            clearFormErrors(form);
+            
+            try {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
                 
-                $({ countNum: 0 }).animate({
-                    countNum: numTarget
-                }, {
-                    duration: 2000,
-                    easing: 'easeInOutQuart',
-                    step: function() {
-                        const num = Math.floor(this.countNum);
-                        counter.text(num + suffix);
+                const response = await fetch('api/contact-form.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
                     },
-                    complete: function() {
-                        counter.text(target);
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('success', result.message);
+                    form.reset();
+                    
+                    // Optional: redirect or show success page
+                    setTimeout(() => {
+                        // You can redirect here if needed
+                    }, 2000);
+                } else {
+                    if (result.errors) {
+                        showFormErrors(form, result.errors);
+                    } else {
+                        showAlert('danger', result.message);
+                    }
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showAlert('danger', 'Bir hata oluştu. Lütfen tekrar deneyin.');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    function initializeNewsletterForm(form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = form.querySelector('input[type="email"]').value;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            if (!validateEmail(email)) {
+                showAlert('warning', 'Geçerli bir e-posta adresi giriniz.');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            try {
+                const response = await fetch('api/newsletter.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('success', 'Newsletter aboneliğiniz başarıyla oluşturuldu!');
+                    form.reset();
+                } else {
+                    showAlert('danger', result.message);
+                }
+            } catch (error) {
+                showAlert('danger', 'Bir hata oluştu. Lütfen tekrar deneyin.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            }
+        });
+    }
+
+    function showFormErrors(form, errors) {
+        Object.keys(errors).forEach(field => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                
+                // Create or update error message
+                let errorDiv = input.parentElement.querySelector('.invalid-feedback');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'invalid-feedback';
+                    input.parentElement.appendChild(errorDiv);
+                }
+                errorDiv.textContent = errors[field];
+            }
+        });
+    }
+
+    function clearFormErrors(form) {
+        const invalidInputs = form.querySelectorAll('.is-invalid');
+        const errorDivs = form.querySelectorAll('.invalid-feedback');
+        
+        invalidInputs.forEach(input => input.classList.remove('is-invalid'));
+        errorDivs.forEach(div => div.remove());
+    }
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // ==========================================
+    // MODALS
+    // ==========================================
+    
+    function initializeModals() {
+        // Portfolio modal
+        const portfolioModal = document.getElementById('portfolioModal');
+        const portfolioButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#portfolioModal"]');
+        
+        portfolioButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const title = this.getAttribute('data-title');
+                const description = this.getAttribute('data-description');
+                const image = this.getAttribute('data-image');
+                const category = this.getAttribute('data-category');
+                const client = this.getAttribute('data-client');
+                const date = this.getAttribute('data-date');
+                const url = this.getAttribute('data-url');
+                
+                if (portfolioModal) {
+                    portfolioModal.querySelector('.modal-title').textContent = title;
+                    portfolioModal.querySelector('.modal-body img').src = image;
+                    portfolioModal.querySelector('.modal-body .description').textContent = description;
+                    // Add more modal content updates as needed
+                }
+            });
+        });
+
+        // Gallery lightbox
+        const galleryItems = document.querySelectorAll('.gallery-item img');
+        galleryItems.forEach(img => {
+            img.addEventListener('click', function() {
+                openLightbox(this.src, this.alt);
+            });
+        });
+    }
+
+    function openLightbox(src, alt) {
+        const lightbox = document.createElement('div');
+        lightbox.className = 'lightbox';
+        lightbox.innerHTML = `
+            <div class="lightbox-content">
+                <img src="${src}" alt="${alt}">
+                <button class="lightbox-close">&times;</button>
+            </div>
+        `;
+        
+        document.body.appendChild(lightbox);
+        document.body.style.overflow = 'hidden';
+        
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox || e.target.classList.contains('lightbox-close')) {
+                closeLightbox(lightbox);
+            }
+        });
+        
+        // ESC key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox(lightbox);
+            }
+        });
+    }
+
+    function closeLightbox(lightbox) {
+        lightbox.remove();
+        document.body.style.overflow = '';
+    }
+
+    // ==========================================
+    // PORTFOLIO FILTER
+    // ==========================================
+    
+    function initializePortfolioFilter() {
+        const filterButtons = document.querySelectorAll('.portfolio-filter .btn, .filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item, .gallery-item');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter items
+                portfolioItems.forEach(item => {
+                    if (filter === '*' || item.classList.contains(filter.substring(1))) {
+                        item.style.display = 'block';
+                        item.classList.add('animate-in');
+                    } else {
+                        item.style.display = 'none';
+                        item.classList.remove('animate-in');
                     }
                 });
             });
-        }
-    }
-
-    /**
-     * Initialize lightbox for gallery
-     */
-    function initializeLightbox() {
-        // Lightbox options
-        if (typeof lightbox !== 'undefined') {
-            lightbox.option({
-                'resizeDuration': 200,
-                'wrapAround': true,
-                'fitImagesInViewport': true,
-                'showImageNumberLabel': true,
-                'albumLabel': "Resim %1 / %2"
-            });
-        }
-
-        // Video gallery functionality
-        $('.gallery-video').on('click', function(e) {
-            e.preventDefault();
-            const videoUrl = $(this).find('a').attr('href');
-            if (videoUrl) {
-                window.open(videoUrl, '_blank');
-            }
         });
     }
 
-    /**
-     * Initialize contact form
-     */
-    function initializeContactForm() {
-        $('#contactForm').on('submit', function(e) {
-            e.preventDefault();
-            
-            const form = $(this);
-            const formData = new FormData(this);
-            
-            // Show loading state
-            const submitBtn = form.find('button[type="submit"]');
-            const originalText = submitBtn.text();
-            submitBtn.prop('disabled', true).text('Gönderiliyor...');
+    // ==========================================
+    // GALLERY
+    // ==========================================
+    
+    function initializeGallery() {
+        // Video play buttons
+        const playButtons = document.querySelectorAll('.play-button');
+        playButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const videoUrl = this.getAttribute('data-video-url');
+                if (videoUrl) {
+                    openVideoModal(videoUrl);
+                }
+            });
+        });
 
-            // Send form data
-            $.ajax({
-                url: 'api/contact-form.php',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    try {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            showAlert('success', 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.');
-                            form[0].reset();
-                        } else {
-                            showAlert('error', result.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+        // Lazy loading for images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            observer.unobserve(img);
                         }
-                    } catch (e) {
-                        showAlert('error', 'Bir hata oluştu. Lütfen tekrar deneyin.');
                     }
-                },
-                error: function() {
-                    showAlert('error', 'Bağlantı hatası. Lütfen tekrar deneyin.');
-                },
-                complete: function() {
-                    submitBtn.prop('disabled', false).text(originalText);
-                }
+                });
             });
-        });
-    }
 
-    /**
-     * Initialize newsletter form
-     */
-    function initializeNewsletterForm() {
-        $('.newsletter-form').on('submit', function(e) {
-            e.preventDefault();
-            
-            const form = $(this);
-            const email = form.find('input[name="email"]').val();
-            
-            if (!isValidEmail(email)) {
-                showAlert('error', 'Geçerli bir e-mail adresi girin.');
-                return;
-            }
-
-            const submitBtn = form.find('button[type="submit"]');
-            const originalHtml = submitBtn.html();
-            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
-
-            // Send newsletter subscription
-            $.ajax({
-                url: 'api/newsletter.php',
-                type: 'POST',
-                data: form.serialize(),
-                success: function(response) {
-                    try {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            showAlert('success', 'Başarıyla abone oldunuz!');
-                            form[0].reset();
-                        } else {
-                            showAlert('error', result.message || 'Bir hata oluştu.');
-                        }
-                    } catch (e) {
-                        showAlert('error', 'Bir hata oluştu.');
-                    }
-                },
-                error: function() {
-                    showAlert('error', 'Bağlantı hatası.');
-                },
-                complete: function() {
-                    submitBtn.prop('disabled', false).html(originalHtml);
-                }
-            });
-        });
-    }
-
-    /**
-     * Initialize lazy loading for images
-     */
-    function initializeLazyLoading() {
-        const imageObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-
-    /**
-     * Initialize smooth scrolling for anchor links
-     */
-    function initializeSmoothScrolling() {
-        $('a[href*="#"]:not([href="#"])').on('click', function(e) {
-            const target = $(this.hash);
-            if (target.length) {
-                e.preventDefault();
-                const headerHeight = $('.header').outerHeight();
-                $('html, body').animate({
-                    scrollTop: target.offset().top - headerHeight
-                }, 800, 'easeInOutQuart');
-            }
-        });
-    }
-
-    /**
-     * Setup additional event listeners
-     */
-    function setupEventListeners() {
-        // Portfolio filter (if exists)
-        $('.portfolio-filter').on('click', 'button', function() {
-            const filter = $(this).data('filter');
-            $('.portfolio-filter button').removeClass('active');
-            $(this).addClass('active');
-            
-            if (filter === '*') {
-                $('.portfolio-item').fadeIn();
-            } else {
-                $('.portfolio-item').hide();
-                $(`.portfolio-item[data-category="${filter}"]`).fadeIn();
-            }
-        });
-
-        // Service card hover effects
-        $('.service-card').hover(
-            function() {
-                $(this).find('.service-image img').addClass('scaled');
-            },
-            function() {
-                $(this).find('.service-image img').removeClass('scaled');
-            }
-        );
-
-        // Portfolio card hover effects
-        $('.portfolio-card').hover(
-            function() {
-                $(this).find('.portfolio-overlay').addClass('visible');
-            },
-            function() {
-                $(this).find('.portfolio-overlay').removeClass('visible');
-            }
-        );
-
-        // Typing effect for hero title (if exists)
-        if ($('.hero-title').hasClass('typing-effect')) {
-            initializeTypingEffect();
+            const lazyImages = document.querySelectorAll('img[data-src]');
+            lazyImages.forEach(img => imageObserver.observe(img));
         }
-
-        // Handle form validation
-        $('form').on('submit', function() {
-            return validateForm($(this));
-        });
     }
 
-    /**
-     * Initialize typing effect
-     */
-    function initializeTypingEffect() {
-        const element = $('.hero-title')[0];
-        const text = element.textContent;
-        element.textContent = '';
-        
-        let i = 0;
-        const typeWriter = () => {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 100);
-            }
-        };
-        
-        setTimeout(typeWriter, 1000);
-    }
-
-    /**
-     * Initialize animations
-     */
-    function initializeAnimations() {
-        // Add entrance animations
-        $('.hero-content').addClass('animate__animated animate__fadeInUp');
-        
-        // Stagger card animations
-        $('.service-card, .portfolio-card').each(function(index) {
-            $(this).css('animation-delay', (index * 0.1) + 's');
-        });
-    }
-
-    /**
-     * Show alert message
-     */
-    function showAlert(type, message) {
-        const alertClass = type === 'error' ? 'alert-danger' : `alert-${type}`;
-        const alert = $(`
-            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    function openVideoModal(videoUrl) {
+        const modal = document.createElement('div');
+        modal.className = 'video-modal';
+        modal.innerHTML = `
+            <div class="video-modal-content">
+                <div class="video-wrapper">
+                    <video controls autoplay>
+                        <source src="${videoUrl}" type="video/mp4">
+                        Tarayıcınız video oynatmayı desteklemiyor.
+                    </video>
+                </div>
+                <button class="video-modal-close">&times;</button>
             </div>
-        `);
+        `;
         
-        $('.container:first').prepend(alert);
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
         
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            alert.fadeOut(() => alert.remove());
-        }, 5000);
-    }
-
-    /**
-     * Validate email address
-     */
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    /**
-     * Validate form
-     */
-    function validateForm(form) {
-        let isValid = true;
-        
-        // Remove previous error states
-        form.find('.is-invalid').removeClass('is-invalid');
-        form.find('.invalid-feedback').remove();
-        
-        // Validate required fields
-        form.find('[required]').each(function() {
-            const field = $(this);
-            const value = field.val().trim();
-            
-            if (!value) {
-                showFieldError(field, 'Bu alan zorunludur.');
-                isValid = false;
-            } else if (field.attr('type') === 'email' && !isValidEmail(value)) {
-                showFieldError(field, 'Geçerli bir e-mail adresi girin.');
-                isValid = false;
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal || e.target.classList.contains('video-modal-close')) {
+                closeVideoModal(modal);
             }
         });
-        
-        return isValid;
     }
 
-    /**
-     * Show field error
-     */
-    function showFieldError(field, message) {
-        field.addClass('is-invalid');
-        field.after(`<div class="invalid-feedback">${message}</div>`);
-    }
-
-    /**
-     * Utility functions
-     */
-    const utils = {
-        // Debounce function
-        debounce: function(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        },
-
-        // Throttle function
-        throttle: function(func, limit) {
-            let inThrottle;
-            return function() {
-                const args = arguments;
-                const context = this;
-                if (!inThrottle) {
-                    func.apply(context, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
-                }
-            };
-        },
-
-        // Get random number
-        random: function(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        },
-
-        // Format number with commas
-        formatNumber: function(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    function closeVideoModal(modal) {
+        const video = modal.querySelector('video');
+        if (video) {
+            video.pause();
         }
-    };
-
-    // Expose utils globally if needed
-    window.CasinoUtils = utils;
-
-    // Performance optimization
-    $(window).on('scroll', utils.throttle(function() {
-        scrollPosition = $(this).scrollTop();
-    }, 10));
-
-    // Handle touch events for mobile
-    if ('ontouchstart' in window) {
-        $(document).on('touchstart', '.btn, .card', function() {
-            $(this).addClass('touched');
-        });
-        
-        $(document).on('touchend', '.btn, .card', function() {
-            const element = $(this);
-            setTimeout(() => element.removeClass('touched'), 150);
-        });
+        modal.remove();
+        document.body.style.overflow = '';
     }
 
-    // Social sharing functionality
-    window.shareToSocial = function(platform, url, text) {
-        url = url || window.location.href;
-        text = text || document.title;
+    // ==========================================
+    // SCROLL EFFECTS
+    // ==========================================
+    
+    function initializeScrollEffects() {
+        // Back to top button
+        const backToTopBtn = createBackToTopButton();
         
-        const shareUrls = {
-            facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-            twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
-            linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-            whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`
-        };
-        
-        if (shareUrls[platform]) {
-            window.open(shareUrls[platform], '_blank', 'width=600,height=400');
-        }
-    };
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
 
-    // Console message
-    console.log(`
-    🎰 Casino Portfolio Website
-    👨‍💻 Geliştirici: BERAT K
-    🚀 Version: 1.0.0
-    🎨 Modern casino-themed portfolio
-    `);
-
-})(jQuery);
-
-// Add custom easing functions
-jQuery.easing.easeInOutQuart = function(x, t, b, c, d) {
-    if ((t /= d / 2) < 1) return c / 2 * t * t * t * t + b;
-    return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
-};
-
-// Service Worker registration (if available)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                console.log('SW registered: ', registration);
-            })
-            .catch(function(registrationError) {
-                console.log('SW registration failed: ', registrationError);
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
+        });
+
+        // Reading progress bar
+        createReadingProgressBar();
+    }
+
+    function createBackToTopButton() {
+        const button = document.createElement('button');
+        button.className = 'back-to-top';
+        button.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        button.setAttribute('aria-label', 'Yukarı çık');
+        
+        document.body.appendChild(button);
+        return button;
+    }
+
+    function createReadingProgressBar() {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'reading-progress';
+        document.body.appendChild(progressBar);
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / documentHeight) * 100;
+            
+            progressBar.style.width = progress + '%';
+        });
+    }
+
+    // ==========================================
+    // PRELOADER
+    // ==========================================
+    
+    function initializePreloader() {
+        const preloader = document.querySelector('.preloader');
+        
+        if (preloader) {
+            window.addEventListener('load', () => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            });
+        }
+    }
+
+    // ==========================================
+    // UTILITY FUNCTIONS
+    // ==========================================
+    
+    function showAlert(type, message, duration = 5000) {
+        const alertContainer = getOrCreateAlertContainer();
+        
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        alertContainer.appendChild(alert);
+        
+        // Auto dismiss
+        setTimeout(() => {
+            if (alert.parentElement) {
+                alert.remove();
+            }
+        }, duration);
+        
+        return alert;
+    }
+
+    function getOrCreateAlertContainer() {
+        let container = document.getElementById('alert-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'alert-container';
+            container.className = 'position-fixed top-0 end-0 p-3';
+            container.style.zIndex = '9999';
+            document.body.appendChild(container);
+        }
+        return container;
+    }
+
+    function debounce(func, wait, immediate) {
+        let timeout;
+        return function executedFunction() {
+            const context = this;
+            const args = arguments;
+            const later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            const callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    }
+
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    // ==========================================
+    // SOCIAL MEDIA INTEGRATION
+    // ==========================================
+    
+    function initializeSocialFeatures() {
+        // Social share buttons
+        const shareButtons = document.querySelectorAll('.social-share');
+        shareButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const platform = this.getAttribute('data-platform');
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent(document.title);
+                
+                let shareUrl = '';
+                switch(platform) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                        break;
+                    case 'twitter':
+                        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://wa.me/?text=${title} ${url}`;
+                        break;
+                }
+                
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                }
+            });
+        });
+    }
+
+    // ==========================================
+    // PERFORMANCE MONITORING
+    // ==========================================
+    
+    function initializePerformanceMonitoring() {
+        // Page load time
+        window.addEventListener('load', () => {
+            const loadTime = performance.now();
+            console.log(`Page loaded in ${Math.round(loadTime)}ms`);
+            
+            // Send to analytics if needed
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'timing_complete', {
+                    'name': 'load',
+                    'value': Math.round(loadTime)
+                });
+            }
+        });
+    }
+
+    // ==========================================
+    // ACCESSIBILITY
+    // ==========================================
+    
+    function initializeAccessibility() {
+        // Skip link
+        const skipLink = document.createElement('a');
+        skipLink.href = '#main-content';
+        skipLink.className = 'skip-link';
+        skipLink.textContent = 'Ana içeriğe geç';
+        document.body.insertBefore(skipLink, document.body.firstChild);
+
+        // Focus management for modals
+        document.addEventListener('shown.bs.modal', function(e) {
+            const modal = e.target;
+            const focusableElements = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length) {
+                focusableElements[0].focus();
+            }
+        });
+
+        // Keyboard navigation for custom elements
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (e.target.classList.contains('clickable')) {
+                    e.preventDefault();
+                    e.target.click();
+                }
+            }
+        });
+    }
+
+    // Initialize additional features
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeSocialFeatures();
+        initializePerformanceMonitoring();
+        initializeAccessibility();
     });
-}
+
+    // ==========================================
+    // EXPORT FOR GLOBAL ACCESS
+    // ==========================================
+    
+    window.CasinoPortfolio = {
+        showAlert,
+        animateCounter,
+        openLightbox,
+        closeLightbox,
+        debounce,
+        throttle
+    };
+
+})();

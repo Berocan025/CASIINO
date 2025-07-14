@@ -23,109 +23,602 @@ $services = $db->findAll('services', ['status' => 'active'], 'order_position ASC
 $pageTitle = $page['title'];
 $metaDescription = $page['meta_description'];
 $metaKeywords = $page['meta_keywords'];
-
-include '../includes/header.php';
 ?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
+    <meta name="description" content="<?php echo htmlspecialchars($metaDescription); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars($metaKeywords); ?>">
+    <meta name="author" content="BERAT K">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($metaDescription); ?>">
+    <meta property="og:type" content="website">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0f0f23;
+            --secondary-color: #1a1a2e;
+            --accent-color: #e94560;
+            --gold-color: #ffd700;
+            --text-light: #f5f5f5;
+            --text-muted: #b0b0b0;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--primary-color);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--text-light);
+            font-weight: 500;
+            margin: 0 10px;
+            position: relative;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-gold);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="services-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white" opacity="0.05"/><rect x="5" y="5" width="2" height="2" fill="gold" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23services-pattern)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .badge-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Services Section */
+        .services-section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--accent-color);
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+        
+        .service-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .service-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .service-features li {
+            padding: 5px 0;
+            color: var(--text-muted);
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .service-features li i {
+            position: absolute;
+            left: 0;
+            top: 8px;
+            color: var(--accent-color);
+        }
+        
+        .service-action {
+            margin-top: auto;
+        }
+        
+        .btn-service {
+            background: var(--gradient-primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-service:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            color: white;
+        }
+        
+        /* Process Section */
+        .process-section {
+            padding: 100px 0;
+            background: var(--secondary-color);
+        }
+        
+        .process-step {
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .step-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .process-step h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+        
+        .process-step p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-description {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-cta {
+            background: var(--gradient-accent);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-heavy);
+            color: white;
+        }
+        
+        .btn-outline-cta {
+            background: transparent;
+            border: 2px solid var(--gold-color);
+            color: var(--gold-color);
+            padding: 13px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-outline-cta:hover {
+            background: var(--gold-color);
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .hero-badges {
+                gap: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .service-card {
+                margin-bottom: 30px;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--primary-color);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="../index.php">
+                <i class="fas fa-dice me-2"></i>
+                BERAT K
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.php">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="services.php">Hizmetler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="portfolio.php">Portföy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gallery.php">Galeri</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php">İletişim</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<main>
     <!-- Hero Section -->
-    <section class="hero-section services-hero">
-        <div class="hero-overlay"></div>
+    <section class="hero-section">
+        <div class="hero-bg"></div>
         <div class="container">
-            <div class="row align-items-center min-vh-100">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="hero-title">
-                        <span class="text-gradient">Profesyonel Hizmetler</span><br>
-                        Casino & Dijital Pazarlama
-                    </h1>
-                    <p class="hero-description">
-                        Casino sektöründe 5+ yıllık deneyimimle, yayıncılıktan dijital pazarlamaya 
-                        kadar kapsamlı hizmetler sunuyorum. Başarılı projelerin arkasındaki güç.
-                    </p>
-                    <div class="hero-badges">
-                        <span class="badge-item">5+ Yıl Deneyim</span>
-                        <span class="badge-item">100+ Başarılı Proje</span>
-                        <span class="badge-item">%300+ ROI</span>
-                    </div>
+            <div class="hero-content" data-aos="fade-up">
+                <h1 class="hero-title">Profesyonel Hizmetler</h1>
+                <p class="hero-subtitle">
+                    Casino sektöründe 5+ yıllık deneyimimle, yayıncılıktan dijital pazarlamaya 
+                    kadar kapsamlı hizmetler sunuyorum. Başarılı projelerin arkasındaki güç.
+                </p>
+                <div class="hero-badges">
+                    <span class="badge-item">5+ Yıl Deneyim</span>
+                    <span class="badge-item">100+ Başarılı Proje</span>
+                    <span class="badge-item">%300+ ROI</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Grid -->
-    <section class="section-padding">
+    <!-- Services Section -->
+    <section class="services-section">
         <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Hizmetlerim</h2>
+                <p>Casino dünyasında başarılı olmak için ihtiyacınız olan tüm profesyonel hizmetler</p>
+            </div>
+            
             <div class="row">
-                <?php foreach ($services as $index => $service): ?>
-                <div class="col-lg-6 mb-5">
-                    <div class="service-detail-card" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
-                        <div class="service-header">
-                            <div class="service-icon-large">
-                                <i class="<?= htmlspecialchars($service['icon']) ?>"></i>
-                            </div>
-                            <div class="service-title-area">
-                                <h3><?= htmlspecialchars($service['title']) ?></h3>
-                                <p class="service-subtitle"><?= htmlspecialchars($service['description']) ?></p>
-                            </div>
-                        </div>
-                        
-                        <div class="service-content">
-                            <div class="service-description">
-                                <?= nl2br(htmlspecialchars($service['content'])) ?>
-                            </div>
-                            
-                            <div class="service-features-list">
-                                <h5>Özellikler:</h5>
-                                <ul>
-                                    <?php 
-                                    $features = explode("\n", $service['features']);
-                                    foreach ($features as $feature): 
-                                        if (trim($feature)):
-                                    ?>
-                                    <li><i class="fas fa-check"></i> <?= htmlspecialchars(trim($feature)) ?></li>
-                                    <?php 
-                                        endif;
-                                    endforeach; 
-                                    ?>
-                                </ul>
-                            </div>
-                            
-                            <div class="service-pricing">
-                                <div class="price-tag">
-                                    <?php if ($service['price_type'] === 'fixed'): ?>
-                                        <span class="price"><?= number_format($service['price']) ?> ₺</span>
-                                        <span class="price-period">Sabit Fiyat</span>
-                                    <?php elseif ($service['price_type'] === 'monthly'): ?>
-                                        <span class="price"><?= number_format($service['price']) ?> ₺</span>
-                                        <span class="price-period">/Aylık</span>
-                                    <?php else: ?>
-                                        <span class="price">Özel Fiyat</span>
-                                        <span class="price-period">Görüşmeye Göre</span>
-                                    <?php endif; ?>
+                <?php if (!empty($services)): ?>
+                    <?php foreach ($services as $index => $service): ?>
+                        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
+                            <div class="service-card">
+                                <div class="service-icon">
+                                    <i class="<?php echo htmlspecialchars($service['icon'] ?? 'fas fa-cog'); ?>"></i>
                                 </div>
-                                <a href="../pages/contact.php?service=<?= urlencode($service['title']) ?>" class="btn btn-primary">
-                                    Teklif Al
-                                    <i class="fas fa-arrow-right ms-2"></i>
-                                </a>
+                                <h3 class="service-title"><?php echo htmlspecialchars($service['title']); ?></h3>
+                                <p class="service-description"><?php echo htmlspecialchars($service['description']); ?></p>
+                                
+                                <div class="service-action">
+                                    <a href="contact.php?service=<?php echo urlencode($service['title']); ?>" class="btn-service">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Teklif Al
+                                    </a>
+                                </div>
                             </div>
                         </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Henüz hizmet eklenmemiş.</p>
                     </div>
-                </div>
-                <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </section>
 
-    <!-- Service Process -->
-    <section class="section-padding bg-dark-secondary">
+    <!-- Process Section -->
+    <section class="process-section">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Çalışma Sürecim</h2>
-                </div>
+            <div class="section-title" data-aos="fade-up">
+                <h2>Çalışma Sürecim</h2>
+                <p>Profesyonel hizmet anlayışımla her adımda yanınızda</p>
             </div>
+            
             <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="process-step">
                         <div class="step-number">01</div>
                         <div class="step-icon">
@@ -135,7 +628,8 @@ include '../includes/header.php';
                         <p>İhtiyaçlarınızı anlıyor, hedeflerinizi belirliyoruz. Detaylı analiz yaparak en uygun stratejiyi planlıyoruz.</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
+                
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="process-step">
                         <div class="step-number">02</div>
                         <div class="step-icon">
@@ -145,343 +639,95 @@ include '../includes/header.php';
                         <p>Sektör analizi ve rakip araştırması yaparak size özel dijital pazarlama stratejisi geliştiriyorum.</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
+                
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="process-step">
                         <div class="step-number">03</div>
                         <div class="step-icon">
                             <i class="fas fa-rocket"></i>
                         </div>
                         <h4>Uygulama</h4>
-                        <p>Belirlenen stratejiyi titizlikle uyguluyorum. Her adımda şeffaf raporlama ile süreci takip edebilirsiniz.</p>
+                        <p>Belirlenen stratejiyi profesyonel ekibimle birlikte hayata geçiriyoruz. Her aşamada raporlama yapıyoruz.</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
+                
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
                     <div class="process-step">
                         <div class="step-number">04</div>
                         <div class="step-icon">
                             <i class="fas fa-trophy"></i>
                         </div>
-                        <h4>Sonuçlar</h4>
-                        <p>Elde edilen sonuçları analiz ediyor, optimizasyonlar yaparak sürekli gelişim sağlıyorum.</p>
+                        <h4>Sonuç & Optimizasyon</h4>
+                        <p>Sonuçları analiz ediyoruz, performansı optimize ediyoruz ve sürekli iyileştirmeler yapıyoruz.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Success Stories -->
-    <section class="section-padding">
+    <!-- CTA Section -->
+    <section class="cta-section">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Başarı Hikayeleri</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="success-card">
-                        <div class="success-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="success-stats">
-                            <h3>%400</h3>
-                            <p>Trafik Artışı</p>
-                        </div>
-                        <div class="success-description">
-                            <h5>Casino Sitesi Optimizasyonu</h5>
-                            <p>6 aylık çalışma sonucunda müşterimin casino sitesinin organik trafiği %400 arttı.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="success-card">
-                        <div class="success-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="success-stats">
-                            <h3>15K+</h3>
-                            <p>Yeni Üye</p>
-                        </div>
-                        <div class="success-description">
-                            <h5>Telegram Kanalı Büyütme</h5>
-                            <p>3 aylık kampanya ile Telegram kanalına 15.000'den fazla aktif üye kazandırdım.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="success-card">
-                        <div class="success-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="success-stats">
-                            <h3>%350</h3>
-                            <p>ROI Artışı</p>
-                        </div>
-                        <div class="success-description">
-                            <h5>Meta Ads Kampanyası</h5>
-                            <p>Facebook ve Instagram reklamları ile müşteri ROI'sini %350 artırdım.</p>
-                        </div>
-                    </div>
+            <div class="cta-content" data-aos="fade-up">
+                <h2 class="cta-title">Projenizi Konuşalım</h2>
+                <p class="cta-description">
+                    Casino yayıncılığı ve dijital pazarlama ihtiyaçlarınız için benimle iletişime geçin. 
+                    Ücretsiz danışmanlık için hemen arayın!
+                </p>
+                
+                <div class="cta-buttons">
+                    <a href="contact.php" class="btn-cta">
+                        <i class="fas fa-envelope"></i>
+                        İletişime Geç
+                    </a>
+                    <a href="https://wa.me/905555555555" target="_blank" class="btn-outline-cta">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Service Packages -->
-    <section class="section-padding bg-dark-secondary">
+    <!-- Footer -->
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Hizmet Paketleri</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="package-card">
-                        <div class="package-header">
-                            <h4>Başlangıç Paketi</h4>
-                            <div class="package-price">
-                                <span class="price">2.500 ₺</span>
-                                <span class="period">/Aylık</span>
-                            </div>
-                        </div>
-                        <div class="package-features">
-                            <ul>
-                                <li><i class="fas fa-check"></i> YouTube yayın danışmanlığı</li>
-                                <li><i class="fas fa-check"></i> Temel sosyal medya yönetimi</li>
-                                <li><i class="fas fa-check"></i> Haftalık raporlama</li>
-                                <li><i class="fas fa-check"></i> E-mail desteği</li>
-                                <li><i class="fas fa-times"></i> Meta Ads yönetimi</li>
-                                <li><i class="fas fa-times"></i> Telegram optimizasyonu</li>
-                            </ul>
-                        </div>
-                        <div class="package-footer">
-                            <a href="../pages/contact.php?package=starter" class="btn btn-outline-primary w-100">
-                                Paketi Seç
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="package-card featured">
-                        <div class="package-badge">En Popüler</div>
-                        <div class="package-header">
-                            <h4>Profesyonel Paket</h4>
-                            <div class="package-price">
-                                <span class="price">5.000 ₺</span>
-                                <span class="period">/Aylık</span>
-                            </div>
-                        </div>
-                        <div class="package-features">
-                            <ul>
-                                <li><i class="fas fa-check"></i> Tüm yayın platformları yönetimi</li>
-                                <li><i class="fas fa-check"></i> Profesyonel sosyal medya</li>
-                                <li><i class="fas fa-check"></i> Meta Ads kampanya yönetimi</li>
-                                <li><i class="fas fa-check"></i> Telegram kanalı optimizasyonu</li>
-                                <li><i class="fas fa-check"></i> Günlük raporlama</li>
-                                <li><i class="fas fa-check"></i> 7/24 WhatsApp desteği</li>
-                            </ul>
-                        </div>
-                        <div class="package-footer">
-                            <a href="../pages/contact.php?package=professional" class="btn btn-primary w-100">
-                                Paketi Seç
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="package-card">
-                        <div class="package-header">
-                            <h4>Kurumsal Paket</h4>
-                            <div class="package-price">
-                                <span class="price">10.000 ₺</span>
-                                <span class="period">/Aylık</span>
-                            </div>
-                        </div>
-                        <div class="package-features">
-                            <ul>
-                                <li><i class="fas fa-check"></i> Tüm profesyonel hizmetler</li>
-                                <li><i class="fas fa-check"></i> Özel strateji geliştirme</li>
-                                <li><i class="fas fa-check"></i> Panel optimizasyonu</li>
-                                <li><i class="fas fa-check"></i> SMS/Email kampanyaları</li>
-                                <li><i class="fas fa-check"></i> Özel danışmanlık</li>
-                                <li><i class="fas fa-check"></i> Öncelikli destek</li>
-                            </ul>
-                        </div>
-                        <div class="package-footer">
-                            <a href="../pages/contact.php?package=enterprise" class="btn btn-outline-primary w-100">
-                                Paketi Seç
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <div class="footer-brand">BERAT K</div>
+            <p class="footer-text">
+                Profesyonel casino yayıncısı ve dijital pazarlama uzmanı
+            </p>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 BERAT K. Tüm hakları saklıdır.</p>
             </div>
         </div>
-    </section>
+    </footer>
 
-    <!-- FAQ Section -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Sıkça Sorulan Sorular</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="accordion" id="faqAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                    Hizmetleriniz hangi casino sitelerine uyumlu?
-                                </button>
-                            </h2>
-                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Tüm popüler casino platformları ile çalışabiliyorum. Betboo, Bets10, Sekabet, Youwin gibi büyük sitelerden küçük ölçekli casino sitelerine kadar geniş yelpazede deneyimim bulunuyor.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                    Sonuçları ne kadar sürede görmeye başlarım?
-                                </button>
-                            </h2>
-                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    İlk sonuçlar genellikle 2-4 hafta içinde görülmeye başlar. Ancak kalıcı ve büyük değişiklikler 2-3 aylık süreçte ortaya çıkar. Her hizmet türüne göre süreler değişebilir.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                    Ödeme koşullarınız nasıl?
-                                </button>
-                            </h2>
-                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Aylık paketlerde ödeme peşin olarak ayın başında alınır. Proje bazlı işlerde %50 peşin, %50 teslim şeklinde çalışıyorum. Tüm ödemeler fatura ile yapılır.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                    Raporlama nasıl yapılıyor?
-                                </button>
-                            </h2>
-                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Haftalık ve aylık detaylı raporlar sunuyorum. Raporlarda trafik analizi, dönüşüm oranları, ROI hesaplamaları ve öneriler yer alır. İstediğiniz zaman güncel verilere erişebilirsiniz.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                                    Sözleşme süresi ne kadar?
-                                </button>
-                            </h2>
-                            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Minimum 3 aylık çalışma süresi öneriyorum çünkü dijital pazarlamada sonuçlar zaman içinde ortaya çıkar. Ancak özel durumlar için esnek çözümler sunabilirim.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact CTA -->
-    <section class="section-padding bg-gradient-primary">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="text-white mb-4">Hangi Hizmete İhtiyacınız Var?</h2>
-                    <p class="text-white-75 mb-4">
-                        Size en uygun hizmeti belirlemek için ücretsiz konsültasyon yapabiliriz. 
-                        Hedeflerinizi konuşup en iyi stratejiyi birlikte belirleyelim.
-                    </p>
-                    <div class="cta-buttons">
-                        <a href="../pages/contact.php" class="btn btn-white btn-lg me-3">
-                            <i class="fas fa-calendar me-2"></i>
-                            Ücretsiz Konsültasyon
-                        </a>
-                        <a href="https://wa.me/905555555555" class="btn btn-outline-white btn-lg" target="_blank">
-                            <i class="fab fa-whatsapp me-2"></i>
-                            WhatsApp'tan Yaz
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-<script>
-// AOS Animation Library initialization
-document.addEventListener('DOMContentLoaded', function() {
-    // Counter animation for success stories
-    const observerOptions = {
-        threshold: 0.5
-    };
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counters = entry.target.querySelectorAll('[data-count]');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
-                    animateCounter(counter, target);
-                });
-            }
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
         });
-    }, observerOptions);
-    
-    const successSection = document.querySelector('.success-card');
-    if (successSection) {
-        observer.observe(successSection.parentElement);
-    }
-});
-
-function animateCounter(element, target) {
-    let current = 0;
-    const increment = target / 100;
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
         
-        if (element.textContent.includes('%')) {
-            element.textContent = Math.floor(current) + '%';
-        } else if (element.textContent.includes('K')) {
-            element.textContent = Math.floor(current / 1000) + 'K+';
-        } else {
-            element.textContent = Math.floor(current).toLocaleString();
-        }
-    }, 20);
-}
-
-// Service card hover effects
-document.querySelectorAll('.service-detail-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-10px)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-</script>
-
-<?php include '../includes/footer.php'; ?>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

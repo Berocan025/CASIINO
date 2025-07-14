@@ -1,0 +1,122 @@
+[Mon Jul 14 23:46:06 2025] PHP 8.4.5 Development Server (http://localhost:8001) started
+[Mon Jul 14 23:46:12 2025] [::1]:51030 Accepted
+[Mon Jul 14 23:46:12 2025] [::1]:51030 [200]: GET /admin/login.php
+[Mon Jul 14 23:46:12 2025] [::1]:51030 Closing
+[Mon Jul 14 23:48:19 2025] [::1]:33848 Accepted
+[Mon Jul 14 23:48:19 2025] Database query failed: SQLSTATE[HY000]: General error: 1 no such column: order_position | Query: SELECT * FROM portfolio WHERE status = :status ORDER BY order_position ASC LIMIT 6
+[Mon Jul 14 23:48:19 2025] Database fetchAll failed: Database query failed: SQLSTATE[HY000]: General error: 1 no such column: order_position
+[Mon Jul 14 23:48:19 2025] Database query failed: SQLSTATE[HY000]: General error: 1 no such column: order_position | Query: SELECT * FROM gallery WHERE status = :status ORDER BY order_position ASC LIMIT 8
+[Mon Jul 14 23:48:19 2025] Database fetchAll failed: Database query failed: SQLSTATE[HY000]: General error: 1 no such column: order_position
+[Mon Jul 14 23:48:19 2025] Database query failed: SQLSTATE[HY000]: General error: 1 no such column: status | Query: SELECT * FROM settings WHERE status = :status
+[Mon Jul 14 23:48:19 2025] Database fetchAll failed: Database query failed: SQLSTATE[HY000]: General error: 1 no such column: status
+[Mon Jul 14 23:48:19 2025] [::1]:33848 [200]: GET /
+[Mon Jul 14 23:48:19 2025] [::1]:33848 Closing
+[Mon Jul 14 23:48:40 2025] [::1]:54764 Accepted
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:48:40 2025] [::1]:54764 [200]: GET /
+[Mon Jul 14 23:48:40 2025] [::1]:54764 Closing
+[Mon Jul 14 23:48:45 2025] [::1]:54776 Accepted
+[Mon Jul 14 23:48:45 2025] [::1]:54776 [200]: GET /admin/login.php
+[Mon Jul 14 23:48:45 2025] [::1]:54776 Closing
+[Mon Jul 14 23:53:58 2025] [::1]:55016 Accepted
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "key" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "value" in /workspace/index.php on line 21
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/index.php on line 740
+[Mon Jul 14 23:53:58 2025] [::1]:55016 [200]: GET /
+[Mon Jul 14 23:53:58 2025] [::1]:55016 Closing
+[Mon Jul 14 23:53:58 2025] [::1]:55020 Accepted
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/pages/services.php on line 34
+[Mon Jul 14 23:53:58 2025] [::1]:55020 [200]: GET /pages/services.php
+[Mon Jul 14 23:53:58 2025] [::1]:55020 Closing
+[Mon Jul 14 23:53:58 2025] [::1]:55030 Accepted
+[Mon Jul 14 23:53:58 2025] [::1]:55030 [200]: GET /pages/portfolio.php
+[Mon Jul 14 23:53:58 2025] [::1]:55030 Closing
+[Mon Jul 14 23:53:58 2025] [::1]:55042 Accepted
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Warning:  Undefined array key "image" in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /workspace/pages/gallery.php on line 237
+[Mon Jul 14 23:53:58 2025] [::1]:55042 [200]: GET /pages/gallery.php
+[Mon Jul 14 23:53:58 2025] [::1]:55042 Closing
+[Mon Jul 14 23:53:58 2025] [::1]:55052 Accepted
+[Mon Jul 14 23:53:58 2025] [::1]:55052 [200]: GET /pages/contact.php
+[Mon Jul 14 23:53:58 2025] [::1]:55052 Closing
+[Mon Jul 14 23:54:02 2025] [::1]:55060 Accepted
+[Mon Jul 14 23:54:02 2025] [::1]:55060 [200]: GET /admin/login.php
+[Mon Jul 14 23:54:02 2025] [::1]:55060 Closing

@@ -2,569 +2,280 @@
 require_once '../includes/config.php';
 require_once '../includes/database.php';
 require_once '../includes/functions.php';
-require_once '../includes/security.php';
 
 $db = new Database();
-
-// Get page content
-$page = $db->find('pages', ['slug' => 'gallery']);
-if (!$page) {
-    $page = [
-        'title' => 'Galeri - BERAT K',
-        'content' => 'Casino yayınları, etkinlikler ve özel anlardan fotoğraflar...',
-        'meta_description' => 'BERAT K\'nin casino yayınları, etkinlikleri ve özel anlarından fotoğraf ve video galerisi.',
-        'meta_keywords' => 'casino galeri, yayın fotoğrafları, casino etkinlikleri, video galeri'
-    ];
-}
-
-// Get gallery items
-$galleryItems = $db->findAll('gallery', ['status' => 'active'], 'order_position ASC');
-
-// Get gallery categories
-$categories = $db->query("SELECT DISTINCT category FROM gallery WHERE status = 'active' ORDER BY category")->fetchAll();
-
-$pageTitle = $page['title'];
-$metaDescription = $page['meta_description'];
-$metaKeywords = $page['meta_keywords'];
-
-include '../includes/header.php';
+$gallery = $db->findAll('gallery', ['status' => 'active'], 'order_position ASC');
 ?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri - BERAT K Casino Yayıncısı</title>
+    <meta name="description" content="BERAT K'nın canlı yayınları, casino deneyimleri ve profesyonel çalışma anlarından kareler">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0f0f23;
+            --secondary-color: #1a1a2e;
+            --accent-color: #e94560;
+            --gold-color: #ffd700;
+            --text-light: #f5f5f5;
+            --text-muted: #b0b0b0;
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--primary-color);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--text-light);
+            font-weight: 500;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: var(--gold-color);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        /* Gallery Section */
+        .gallery-section {
+            padding: 100px 0;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .gallery-overlay i {
+            font-size: 2rem;
+            color: var(--gold-color);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="../index.php">
+                <i class="fas fa-dice me-2"></i>
+                BERAT K
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../index.php">Ana Sayfa</a>
+                <a class="nav-link" href="services.php">Hizmetler</a>
+                <a class="nav-link" href="portfolio.php">Portföy</a>
+                <a class="nav-link active" href="gallery.php">Galeri</a>
+                <a class="nav-link" href="contact.php">İletişim</a>
+            </div>
+        </div>
+    </nav>
 
-<main>
     <!-- Hero Section -->
-    <section class="hero-section gallery-hero">
-        <div class="hero-overlay"></div>
+    <section class="hero-section">
         <div class="container">
-            <div class="row align-items-center min-vh-100">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="hero-title">
-                        <span class="text-gradient">Galeri</span><br>
-                        Özel Anlar & Yayınlar
-                    </h1>
-                    <p class="hero-description">
-                        Casino yayıncılığı kariyerimden öne çıkan anlar, canlı yayın kareleri, 
-                        etkinlikler ve başarılı projelerden görüntüler.
-                    </p>
-                    <div class="hero-gallery-stats">
-                        <div class="gallery-stat">
-                            <i class="fas fa-images"></i>
-                            <span>500+ Fotoğraf</span>
-                        </div>
-                        <div class="gallery-stat">
-                            <i class="fas fa-video"></i>
-                            <span>100+ Video</span>
-                        </div>
-                        <div class="gallery-stat">
-                            <i class="fas fa-calendar"></i>
-                            <span>5+ Yıl Arşiv</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="hero-content" data-aos="fade-up">
+                <h1 class="hero-title">Galeri</h1>
+                <p class="hero-subtitle">
+                    Canlı yayınlarımdan ve casino deneyimlerimden kareler
+                </p>
             </div>
         </div>
     </section>
 
-    <!-- Gallery Filter -->
-    <section class="section-padding-sm bg-dark-secondary">
+    <!-- Gallery Section -->
+    <section class="gallery-section">
         <div class="container">
             <div class="row">
-                <div class="col-12">
-                    <div class="gallery-filter text-center">
-                        <button class="filter-btn active" data-filter="*">Tümü</button>
-                        <button class="filter-btn" data-filter=".photos">Fotoğraflar</button>
-                        <button class="filter-btn" data-filter=".videos">Videolar</button>
-                        <?php foreach ($categories as $category): ?>
-                        <button class="filter-btn" data-filter=".<?= strtolower(str_replace(' ', '-', $category['category'])) ?>">
-                            <?= htmlspecialchars($category['category']) ?>
-                        </button>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Grid -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="gallery-grid">
-                <?php foreach ($galleryItems as $item): ?>
-                <div class="gallery-item <?= $item['type'] === 'video' ? 'videos' : 'photos' ?> <?= strtolower(str_replace(' ', '-', $item['category'])) ?>" 
-                     data-title="<?= htmlspecialchars($item['title']) ?>"
-                     data-description="<?= htmlspecialchars($item['description']) ?>"
-                     data-date="<?= htmlspecialchars($item['created_at']) ?>">
-                    
-                    <?php if ($item['type'] === 'video'): ?>
-                    <!-- Video Item -->
-                    <div class="gallery-video-card">
-                        <div class="video-thumbnail">
-                            <img src="<?= htmlspecialchars($item['thumbnail']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="img-fluid">
-                            <div class="video-overlay">
-                                <div class="play-button" data-video-url="<?= htmlspecialchars($item['file_path']) ?>">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                                <div class="video-duration">
-                                    <?= htmlspecialchars($item['duration'] ?? '0:00') ?>
+                <?php if (!empty($gallery)): ?>
+                    <?php foreach ($gallery as $index => $item): ?>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
+                            <div class="gallery-item">
+                                <img src="../uploads/gallery/<?php echo htmlspecialchars($item['image']); ?>" 
+                                     alt="<?php echo htmlspecialchars($item['title']); ?>" 
+                                     class="gallery-image">
+                                <div class="gallery-overlay">
+                                    <i class="fas fa-search-plus"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="video-info">
-                            <h5><?= htmlspecialchars($item['title']) ?></h5>
-                            <p><?= htmlspecialchars($item['description']) ?></p>
-                            <div class="video-meta">
-                                <span class="category"><?= htmlspecialchars($item['category']) ?></span>
-                                <span class="date"><?= date('d.m.Y', strtotime($item['created_at'])) ?></span>
-                            </div>
-                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Henüz galeri görseli eklenmemiş.</p>
                     </div>
-                    
-                    <?php else: ?>
-                    <!-- Photo Item -->
-                    <div class="gallery-photo-card">
-                        <div class="photo-image">
-                            <img src="<?= htmlspecialchars($item['file_path']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="img-fluid">
-                            <div class="photo-overlay">
-                                <div class="photo-overlay-content">
-                                    <h5><?= htmlspecialchars($item['title']) ?></h5>
-                                    <p><?= htmlspecialchars($item['description']) ?></p>
-                                    <button class="btn btn-light btn-sm photo-zoom-btn">
-                                        <i class="fas fa-search-plus"></i> Büyüt
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="photo-info">
-                            <div class="photo-meta">
-                                <span class="category"><?= htmlspecialchars($item['category']) ?></span>
-                                <span class="date"><?= date('d.m.Y', strtotime($item['created_at'])) ?></span>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <?php endforeach; ?>
-            </div>
-            
-            <!-- Load More Button -->
-            <div class="row">
-                <div class="col-12 text-center mt-5">
-                    <button class="btn btn-primary btn-lg" id="loadMoreBtn" style="display: none;">
-                        <i class="fas fa-plus me-2"></i>
-                        Daha Fazla Yükle
-                    </button>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
 
-    <!-- Featured Streams Section -->
-    <section class="section-padding bg-dark-secondary">
+    <!-- Footer -->
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Öne Çıkan Yayınlar</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="featured-stream-card">
-                        <div class="stream-thumbnail">
-                            <img src="../assets/img/stream-1.jpg" alt="En Büyük Kazanç" class="img-fluid">
-                            <div class="stream-badge">
-                                <i class="fas fa-trophy"></i>
-                                Rekor Kazanç
-                            </div>
-                            <div class="stream-play">
-                                <i class="fab fa-youtube"></i>
-                            </div>
-                        </div>
-                        <div class="stream-info">
-                            <h4>En Büyük Kazanç Anı</h4>
-                            <p>Sweet Bonanza'da yakaladığım x1000 multiplikör ile elde ettiğim 50.000₺ kazanç anı. Tarihi bir yayın!</p>
-                            <div class="stream-stats">
-                                <span><i class="fas fa-eye"></i> 2.5M İzlenme</span>
-                                <span><i class="fas fa-heart"></i> 45K Beğeni</span>
-                            </div>
-                            <a href="https://youtube.com/watch?v=example1" target="_blank" class="btn btn-primary btn-sm">
-                                <i class="fab fa-youtube me-2"></i>
-                                İzle
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="featured-stream-card">
-                        <div class="stream-thumbnail">
-                            <img src="../assets/img/stream-2.jpg" alt="Canlı Turnuva" class="img-fluid">
-                            <div class="stream-badge">
-                                <i class="fas fa-medal"></i>
-                                Turnuva
-                            </div>
-                            <div class="stream-play">
-                                <i class="fab fa-twitch"></i>
-                            </div>
-                        </div>
-                        <div class="stream-info">
-                            <h4>Canlı Turnuva Finali</h4>
-                            <p>Pragma Play turnuvasının final maçında birinci olduğum heyecanlı anlar. 25.000₺ ödül!</p>
-                            <div class="stream-stats">
-                                <span><i class="fas fa-eye"></i> 1.8M İzlenme</span>
-                                <span><i class="fas fa-heart"></i> 38K Beğeni</span>
-                            </div>
-                            <a href="https://twitch.tv/videos/example2" target="_blank" class="btn btn-primary btn-sm">
-                                <i class="fab fa-twitch me-2"></i>
-                                İzle
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="featured-stream-card">
-                        <div class="stream-thumbnail">
-                            <img src="../assets/img/stream-3.jpg" alt="Özel Etkinlik" class="img-fluid">
-                            <div class="stream-badge">
-                                <i class="fas fa-star"></i>
-                                Özel Etkinlik
-                            </div>
-                            <div class="stream-play">
-                                <i class="fab fa-youtube"></i>
-                            </div>
-                        </div>
-                        <div class="stream-info">
-                            <h4>1000 Abone Özel Yayını</h4>
-                            <p>1000 aboneye özel olarak düzenlediğim 24 saatlik maraton yayın. Unutulmaz anlar!</p>
-                            <div class="stream-stats">
-                                <span><i class="fas fa-eye"></i> 3.2M İzlenme</span>
-                                <span><i class="fas fa-heart"></i> 52K Beğeni</span>
-                            </div>
-                            <a href="https://youtube.com/watch?v=example3" target="_blank" class="btn btn-primary btn-sm">
-                                <i class="fab fa-youtube me-2"></i>
-                                İzle
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <div class="footer-brand">BERAT K</div>
+            <p class="footer-text">
+                Profesyonel casino yayıncısı ve dijital pazarlama uzmanı
+            </p>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 BERAT K. Tüm hakları saklıdır.</p>
             </div>
         </div>
-    </section>
+    </footer>
 
-    <!-- Social Media Gallery -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Sosyal Medya Galerimiz</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="social-gallery-card">
-                        <div class="social-platform youtube">
-                            <i class="fab fa-youtube"></i>
-                            <span>YouTube</span>
-                        </div>
-                        <div class="social-content">
-                            <img src="../assets/img/youtube-gallery.jpg" alt="YouTube İçerikleri" class="img-fluid">
-                        </div>
-                        <div class="social-stats">
-                            <div class="stat">
-                                <span class="number">250K+</span>
-                                <span class="label">Abone</span>
-                            </div>
-                            <div class="stat">
-                                <span class="number">15M+</span>
-                                <span class="label">İzlenme</span>
-                            </div>
-                        </div>
-                        <a href="https://youtube.com/@beratk" target="_blank" class="social-link">
-                            Kanalı Ziyaret Et
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="social-gallery-card">
-                        <div class="social-platform twitch">
-                            <i class="fab fa-twitch"></i>
-                            <span>Twitch</span>
-                        </div>
-                        <div class="social-content">
-                            <img src="../assets/img/twitch-gallery.jpg" alt="Twitch Yayınları" class="img-fluid">
-                        </div>
-                        <div class="social-stats">
-                            <div class="stat">
-                                <span class="number">50K+</span>
-                                <span class="label">Takipçi</span>
-                            </div>
-                            <div class="stat">
-                                <span class="number">2.5K</span>
-                                <span class="label">Ortalama İzleyici</span>
-                            </div>
-                        </div>
-                        <a href="https://twitch.tv/beratk" target="_blank" class="social-link">
-                            Kanalı Ziyaret Et
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="social-gallery-card">
-                        <div class="social-platform instagram">
-                            <i class="fab fa-instagram"></i>
-                            <span>Instagram</span>
-                        </div>
-                        <div class="social-content">
-                            <img src="../assets/img/instagram-gallery.jpg" alt="Instagram Paylaşımları" class="img-fluid">
-                        </div>
-                        <div class="social-stats">
-                            <div class="stat">
-                                <span class="number">75K+</span>
-                                <span class="label">Takipçi</span>
-                            </div>
-                            <div class="stat">
-                                <span class="number">15K</span>
-                                <span class="label">Ortalama Beğeni</span>
-                            </div>
-                        </div>
-                        <a href="https://instagram.com/beratk_casino" target="_blank" class="social-link">
-                            Profili Ziyaret Et
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="social-gallery-card">
-                        <div class="social-platform telegram">
-                            <i class="fab fa-telegram"></i>
-                            <span>Telegram</span>
-                        </div>
-                        <div class="social-content">
-                            <img src="../assets/img/telegram-gallery.jpg" alt="Telegram Kanalı" class="img-fluid">
-                        </div>
-                        <div class="social-stats">
-                            <div class="stat">
-                                <span class="number">25K+</span>
-                                <span class="label">Üye</span>
-                            </div>
-                            <div class="stat">
-                                <span class="number">%85</span>
-                                <span class="label">Etkileşim</span>
-                            </div>
-                        </div>
-                        <a href="https://t.me/beratk_casino" target="_blank" class="social-link">
-                            Kanala Katıl
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact CTA -->
-    <section class="section-padding bg-gradient-primary">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="text-white mb-4">Siz de Galerimizde Yer Alın</h2>
-                    <p class="text-white-75 mb-4">
-                        Benimle çalıştığınızda başarılı projeleriniz de bu galeride yerini alacak. 
-                        Birlikte unutulmaz anlar yaşayalım!
-                    </p>
-                    <div class="cta-buttons">
-                        <a href="../pages/contact.php" class="btn btn-white btn-lg me-3">
-                            <i class="fas fa-handshake me-2"></i>
-                            İşbirliği Yap
-                        </a>
-                        <a href="../pages/services.php" class="btn btn-outline-white btn-lg">
-                            <i class="fas fa-list me-2"></i>
-                            Hizmetleri İncele
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-<!-- Photo Lightbox Modal -->
-<div class="modal fade" id="photoModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content bg-transparent border-0">
-            <div class="modal-header border-0">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <img id="modalImage" src="" alt="" class="img-fluid">
-                <div class="modal-image-info mt-3 text-white">
-                    <h5 id="modalImageTitle"></h5>
-                    <p id="modalImageDescription"></p>
-                    <small id="modalImageDate" class="text-white-50"></small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Video Modal -->
-<div class="modal fade" id="videoModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="videoModalTitle">Video</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="ratio ratio-16x9">
-                    <video id="modalVideo" controls>
-                        <source src="" type="video/mp4">
-                        Tarayıcınız video oynatmayı desteklemiyor.
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Gallery filtering
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.getAttribute('data-filter');
-            
-            galleryItems.forEach(item => {
-                if (filter === '*' || item.classList.contains(filter.substring(1))) {
-                    item.style.display = 'block';
-                    item.style.animation = 'fadeIn 0.5s ease';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
         });
-    });
-    
-    // Photo lightbox
-    const photoModal = new bootstrap.Modal(document.getElementById('photoModal'));
-    const photoZoomBtns = document.querySelectorAll('.photo-zoom-btn');
-    
-    photoZoomBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.gallery-item');
-            const img = card.querySelector('img');
-            const title = card.getAttribute('data-title');
-            const description = card.getAttribute('data-description');
-            const date = card.getAttribute('data-date');
-            
-            document.getElementById('modalImage').src = img.src;
-            document.getElementById('modalImageTitle').textContent = title;
-            document.getElementById('modalImageDescription').textContent = description;
-            document.getElementById('modalImageDate').textContent = new Date(date).toLocaleDateString('tr-TR');
-            
-            photoModal.show();
-        });
-    });
-    
-    // Video modal
-    const videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
-    const playBtns = document.querySelectorAll('.play-button');
-    
-    playBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const videoUrl = this.getAttribute('data-video-url');
-            const card = this.closest('.gallery-item');
-            const title = card.getAttribute('data-title');
-            
-            document.getElementById('modalVideo').src = videoUrl;
-            document.getElementById('videoModalTitle').textContent = title;
-            
-            videoModal.show();
-        });
-    });
-    
-    // Pause video when modal closes
-    document.getElementById('videoModal').addEventListener('hidden.bs.modal', function() {
-        const video = document.getElementById('modalVideo');
-        video.pause();
-        video.currentTime = 0;
-    });
-    
-    // Lazy loading for images
-    const images = document.querySelectorAll('img[data-src]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-    
-    // Gallery hover effects
-    document.querySelectorAll('.gallery-photo-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.querySelector('.photo-overlay').style.opacity = '1';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.querySelector('.photo-overlay').style.opacity = '0';
-        });
-    });
-    
-    // Social stats counter animation
-    const socialCards = document.querySelectorAll('.social-gallery-card');
-    const observerOptions = {
-        threshold: 0.5
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const numbers = entry.target.querySelectorAll('.number');
-                numbers.forEach(number => {
-                    animateNumber(number);
-                });
-            }
-        });
-    }, observerOptions);
-    
-    socialCards.forEach(card => observer.observe(card));
-});
-
-function animateNumber(element) {
-    const text = element.textContent;
-    const target = parseInt(text.replace(/[^\d]/g, ''));
-    let current = 0;
-    const increment = target / 100;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-        
-        if (text.includes('K')) {
-            element.textContent = Math.floor(current / 1000) + 'K+';
-        } else if (text.includes('M')) {
-            element.textContent = Math.floor(current / 1000000) + 'M+';
-        } else if (text.includes('%')) {
-            element.textContent = Math.floor(current) + '%';
-        } else {
-            element.textContent = Math.floor(current).toLocaleString();
-        }
-    }, 20);
-}
-</script>
-
-<?php include '../includes/footer.php'; ?>
+    </script>
+</body>
+</html>

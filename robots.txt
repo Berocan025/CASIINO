@@ -1,0 +1,50 @@
+# Robots.txt for Casino Portfolio Website
+# Geliştirici: BERAT K
+# SEO optimization for search engines
+
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /uploads/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /database/
+Disallow: /includes/
+Disallow: /logs/
+Disallow: /*.sqlite$
+Disallow: /*.log$
+Disallow: /.htaccess
+Disallow: /config.php
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml

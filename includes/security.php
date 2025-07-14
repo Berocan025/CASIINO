@@ -397,4 +397,83 @@ function log_security_event($event, $data = []) {
     
     error_log("SECURITY: " . json_encode($log_data));
 }
+
+// CamelCase wrapper functions for compatibility with login.php
+function sanitizeInput($data) {
+    return sanitize_input($data);
+}
+
+function validateCSRFToken($token) {
+    return verify_csrf($token);
+}
+
+function generateCSRFToken() {
+    return csrf_token();
+}
+
+function getUserIP() {
+    return get_client_ip();
+}
+
+// Rate limiting functions
+$_rate_limit_cache = [];
+
+function isRateLimited($identifier, $action, $maxAttempts = 5, $timeWindow = 300) {
+    global $_rate_limit_cache;
+    
+    $key = $identifier . '_' . $action;
+    $now = time();
+    
+    // Clean old entries
+    if (isset($_rate_limit_cache[$key])) {
+        $_rate_limit_cache[$key] = array_filter($_rate_limit_cache[$key], function($timestamp) use ($now, $timeWindow) {
+            return ($now - $timestamp) < $timeWindow;
+        });
+    } else {
+        $_rate_limit_cache[$key] = [];
+    }
+    
+    return count($_rate_limit_cache[$key]) >= $maxAttempts;
+}
+
+function recordFailedAttempt($identifier, $action) {
+    global $_rate_limit_cache;
+    
+    $key = $identifier . '_' . $action;
+    if (!isset($_rate_limit_cache[$key])) {
+        $_rate_limit_cache[$key] = [];
+    }
+    $_rate_limit_cache[$key][] = time();
+}
+
+function clearRateLimit($identifier, $action) {
+    global $_rate_limit_cache;
+    
+    $key = $identifier . '_' . $action;
+    unset($_rate_limit_cache[$key]);
+}
+
+function logSecurityEvent($event, $userId = 0, $ip = null, $data = []) {
+    $logData = [
+        'timestamp' => date('Y-m-d H:i:s'),
+        'event' => $event,
+        'user_id' => $userId,
+        'ip' => $ip ?: get_client_ip(),
+        'user_agent' => get_user_agent(),
+        'data' => $data
+    ];
+    
+    error_log("SECURITY: " . json_encode($logData));
+}
+
+// Additional authentication functions
+function isLoggedIn() {
+    return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
+}
+
+function isAdmin() {
+    return isLoggedIn() && isset($_SESSION['admin_id']) && !empty($_SESSION['admin_id']);
+}
+
+
 ?>

@@ -189,7 +189,7 @@ class Database {
         }
     }
     
-    /**
+        /**
      * Count rows in table
      * @param string $table
      * @param array $where
@@ -216,7 +216,68 @@ class Database {
             return 0;
         }
     }
-    
+
+    /**
+     * Find single record from table
+     * @param string $table
+     * @param array $where
+     * @return array|false
+     */
+    public function find($table, $where = []) {
+        try {
+            $query = "SELECT * FROM {$table}";
+            $params = [];
+            
+            if (!empty($where)) {
+                $where_clause = [];
+                foreach (array_keys($where) as $column) {
+                    $where_clause[] = "{$column} = :{$column}";
+                }
+                $query .= " WHERE " . implode(' AND ', $where_clause);
+                $params = $where;
+            }
+            
+            $query .= " LIMIT 1";
+            
+            return $this->fetchRow($query, $params);
+        } catch (Exception $e) {
+            error_log("Database find failed: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Find all records from table
+     * @param string $table
+     * @param array $where
+     * @param string $order_by
+     * @return array
+     */
+    public function findAll($table, $where = [], $order_by = '') {
+        try {
+            $query = "SELECT * FROM {$table}";
+            $params = [];
+            
+            if (!empty($where)) {
+                $where_clause = [];
+                foreach (array_keys($where) as $column) {
+                    $where_clause[] = "{$column} = :{$column}";
+                }
+                $query .= " WHERE " . implode(' AND ', $where_clause);
+                $params = $where;
+            }
+            
+            if (!empty($order_by)) {
+                $query .= " ORDER BY " . $order_by;
+            }
+            
+            return $this->fetchAll($query, $params);
+        } catch (Exception $e) {
+            error_log("Database findAll failed: " . $e->getMessage());
+            return [];
+        }
+    }
+
     /**
      * Begin transaction
      * @return bool

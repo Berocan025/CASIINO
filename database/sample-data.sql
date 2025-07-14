@@ -2,8 +2,8 @@
 -- Geliştirici: BERAT K
 
 -- Insert default admin user (password: admin123)
-INSERT INTO users (username, email, password, full_name, role) VALUES 
-('admin', 'admin@casinoportfolio.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'BERAT K', 'admin');
+INSERT INTO users (username, email, password, full_name, role, status) VALUES 
+('admin', 'admin@casinoportfolio.com', '$2y$12$H3t7Ot1yOAx7o4/7mMszSuC97EE1QgZxVUQ7NCsBE1x8WW234i/zi', 'BERAT K', 'admin', 'active');
 
 -- Insert default pages
 INSERT INTO pages (title, slug, content, meta_title, meta_description, status) VALUES 

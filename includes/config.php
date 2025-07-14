@@ -15,8 +15,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Site configuration
-define('SITE_URL', 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST']);
-define('SITE_PATH', dirname($_SERVER['SCRIPT_NAME']));
+define('SITE_URL', 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+define('SITE_PATH', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
 define('SITE_NAME', 'Casino Yayıncısı - BERAT K');
 define('SITE_VERSION', '1.0.0');
 
@@ -81,17 +81,17 @@ define('SMTP_PASSWORD', '');
 // Timezone
 date_default_timezone_set('Europe/Istanbul');
 
-// Start session with security settings
-if (session_status() === PHP_SESSION_NONE) {
+// Start session with security settings (only for web requests)
+if (session_status() === PHP_SESSION_NONE && php_sapi_name() !== 'cli') {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
     ini_set('session.use_strict_mode', 1);
     session_start();
-}
-
-// CSRF Protection
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    
+    // CSRF Protection
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
 }
 
 // Include required files

@@ -4,47 +4,20 @@
 
 User-agent: *
 Allow: /
-Allow: /assets/
-Allow: /uploads/
+
+# Disallow admin pages
 Disallow: /admin/
 Disallow: /api/
-Disallow: /database/
 Disallow: /includes/
-Disallow: /logs/
-Disallow: /*.sqlite$
-Disallow: /*.log$
-Disallow: /.htaccess
-Disallow: /config.php
+Disallow: /database/
+Disallow: /backups/
+Disallow: /cache/
 
-# Specific bot rules
-User-agent: Googlebot
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-
-User-agent: Bingbot
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-
-# Block bad bots
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: BLEXBot
-Disallow: /
-
-# Crawl delay
-Crawl-delay: 1
+# Allow important pages
+Allow: /admin/login.php
 
 # Sitemap location
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://yoursite.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

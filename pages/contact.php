@@ -4,49 +4,49 @@ require_once '../includes/database.php';
 require_once '../includes/functions.php';
 
 $db = new Database();
-$message = '';
-$messageType = '';
+$success_message = '';
+$error_message = '';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = sanitizeInput($_POST['name'] ?? '');
-    $email = sanitizeInput($_POST['email'] ?? '');
-    $subject = sanitizeInput($_POST['subject'] ?? '');
-    $messageContent = sanitizeInput($_POST['message'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $subject = trim($_POST['subject'] ?? '');
+    $message = trim($_POST['message'] ?? '');
     
-    if (empty($name) || empty($email) || empty($subject) || empty($messageContent)) {
-        $message = 'Lütfen tüm alanları doldurun.';
-        $messageType = 'error';
+    // Validation
+    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+        $error_message = 'Lütfen tüm zorunlu alanları doldurun.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $message = 'Geçerli bir e-posta adresi girin.';
-        $messageType = 'error';
+        $error_message = 'Geçerli bir e-posta adresi girin.';
     } else {
+        // Save to database
         try {
-            $result = $db->insert('messages', [
+            $data = [
                 'name' => $name,
                 'email' => $email,
+                'phone' => $phone,
                 'subject' => $subject,
-                'message' => $messageContent,
-                'status' => 'unread',
+                'message' => $message,
+                'status' => 'new',
                 'created_at' => date('Y-m-d H:i:s')
-            ]);
+            ];
             
-            if ($result) {
-                $message = 'Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağım.';
-                $messageType = 'success';
-            } else {
-                $message = 'Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.';
-                $messageType = 'error';
-            }
+            $db->insert('messages', $data);
+            $success_message = 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağım.';
+            
+            // Clear form data
+            $name = $email = $phone = $subject = $message = '';
+            
         } catch (Exception $e) {
-            $message = 'Sistem hatası oluştu. Lütfen daha sonra tekrar deneyin.';
-            $messageType = 'error';
+            $error_message = 'Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin.';
         }
     }
 }
 
 $pageTitle = 'İletişim - BERAT K Casino Yayıncısı';
-$metaDescription = 'BERAT K ile iletişime geçin. Casino yayıncılığı ve dijital pazarlama hizmetleri için benimle iletişime geçin.';
+$metaDescription = 'Profesyonel casino yayıncılığı hizmetleri için benimle iletişime geçin. Hemen teklif alın!';
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -55,7 +55,7 @@ $metaDescription = 'BERAT K ile iletişime geçin. Casino yayıncılığı ve di
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($metaDescription); ?>">
-    <meta name="keywords" content="casino iletişim, berat k iletişim, casino yayıncısı iletişim">
+    <meta name="keywords" content="casino yayıncısı iletişim, teklif al, casino hizmetleri, iş birliği">
     <meta name="author" content="BERAT K">
     
     <!-- Bootstrap CSS -->
@@ -68,614 +68,784 @@ $metaDescription = 'BERAT K ile iletişime geçin. Casino yayıncılığı ve di
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Particles.js -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Enhanced Casino Theme -->
+    <link href="../assets/css/casino-enhanced.css" rel="stylesheet">
     
     <style>
-        :root {
-            --casino-black: #0a0a0a;
-            --casino-dark: #1a1a1a;
-            --casino-gold: #FFD700;
-            --casino-red: #DC143C;
-            --neon-pink: #FF1493;
-            --neon-cyan: #00FFFF;
-            --text-light: #FFFFFF;
-            --text-silver: #C0C0C0;
-            --shadow-neon: 0 0 20px;
-            --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.8);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--casino-black);
-            color: var(--text-light);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        /* Particles Background */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-        
-        /* Casino Navigation */
-        .casino-navbar {
-            background: linear-gradient(135deg, var(--casino-black) 0%, var(--casino-dark) 100%);
-            backdrop-filter: blur(15px);
-            border-bottom: 2px solid var(--casino-gold);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow-heavy);
-        }
-        
-        .casino-brand {
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            font-size: 2rem;
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink), var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-            text-shadow: var(--shadow-neon) var(--casino-gold);
-        }
-        
-        .casino-nav-link {
-            color: var(--text-silver);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin: 0 15px;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        
-        .casino-nav-link:hover,
-        .casino-nav-link.active {
-            color: var(--casino-gold);
-            text-shadow: var(--shadow-neon) var(--casino-gold);
-        }
-        
-        /* Hero Section */
-        .casino-hero {
-            padding: 120px 0 80px;
-            background: linear-gradient(135deg, var(--casino-black) 0%, var(--casino-dark) 100%);
-            text-align: center;
+        /* CONTACT PAGE SPECIAL EFFECTS */
+        .contact-hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a0033 20%, #330066 40%, #660033 60%, #330000 80%, #000000 100%);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .casino-hero::before {
+
+        .contact-hero::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 80%, var(--casino-red) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, var(--neon-cyan) 0%, transparent 50%);
-            opacity: 0.1;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,50 Q50,20 80,50 Q50,80 20,50" fill="none" stroke="rgba(255,215,0,0.1)" stroke-width="1"/><path d="M50,20 Q80,50 50,80 Q20,50 50,20" fill="none" stroke="rgba(255,20,147,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="3" fill="rgba(0,255,255,0.2)"/></svg>') repeat;
+            background-size: 100px 100px;
+            animation: wave-pattern 15s linear infinite;
         }
-        
-        .casino-hero-content {
+
+        @keyframes wave-pattern {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-25px) translateY(25px); }
+            50% { transform: translateX(50px) translateY(-50px); }
+            75% { transform: translateX(-75px) translateY(75px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+
+        .contact-hero-content {
+            text-align: center;
             position: relative;
             z-index: 2;
         }
-        
-        .casino-hero-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.5rem;
+
+        .contact-hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
             font-weight: 900;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink), var(--neon-cyan));
+            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink), var(--neon-blue), var(--casino-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: var(--shadow-neon) var(--casino-gold);
+            text-shadow: 0 0 50px rgba(255,215,0,0.5);
+            margin-bottom: 1rem;
+            animation: glow-pulse 3s ease-in-out infinite alternate;
         }
-        
-        .casino-hero-subtitle {
-            font-size: 1.3rem;
+
+        .contact-hero-subtitle {
+            font-size: 1.5rem;
             color: var(--text-silver);
             margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(192,192,192,0.5);
         }
-        
-        /* Contact Section */
-        .casino-contact-section {
-            padding: 120px 0;
-            position: relative;
-        }
-        
-        .casino-section-title {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-        
-        .casino-section-title h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink), var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: var(--shadow-neon) var(--casino-gold);
-        }
-        
-        .casino-section-title p {
-            font-size: 1.2rem;
-            color: var(--text-silver);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        /* Contact Cards */
-        .casino-contact-card {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(220, 20, 60, 0.1));
-            backdrop-filter: blur(15px);
-            border: 2px solid var(--casino-gold);
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .casino-contact-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-heavy);
-            border-color: var(--neon-pink);
-        }
-        
-        .casino-contact-icon {
-            font-size: 3.5rem;
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-        }
-        
-        .casino-contact-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--casino-gold);
-            text-transform: uppercase;
-        }
-        
-        .casino-contact-info {
-            color: var(--text-silver);
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .casino-contact-link {
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink));
-            color: var(--casino-black);
-            text-decoration: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-        
-        .casino-contact-link:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-neon) var(--casino-gold);
-            color: var(--casino-black);
-        }
-        
-        /* Contact Form */
-        .casino-form-container {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(220, 20, 60, 0.1));
-            backdrop-filter: blur(15px);
-            border: 2px solid var(--casino-gold);
-            border-radius: 20px;
-            padding: 3rem;
+
+        .contact-info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
             margin-top: 3rem;
         }
-        
-        .casino-form-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--casino-gold);
-            text-transform: uppercase;
-        }
-        
-        .casino-form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .casino-form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--casino-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .casino-form-input,
-        .casino-form-textarea {
-            width: 100%;
-            padding: 15px;
+
+        .contact-info-card {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
             border: 2px solid var(--casino-gold);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-light);
-            font-size: 1rem;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .casino-form-input:focus,
-        .casino-form-textarea:focus {
-            outline: none;
+
+        .contact-info-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            animation: pulse-glow 3s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-info-card:hover::before {
+            opacity: 1;
+        }
+
+        .contact-info-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255,215,0,0.3);
             border-color: var(--neon-pink);
-            box-shadow: var(--shadow-neon) var(--neon-pink);
         }
-        
-        .casino-form-textarea {
-            resize: vertical;
-            min-height: 150px;
+
+        .contact-info-icon {
+            font-size: 3rem;
+            color: var(--casino-gold);
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
         }
-        
-        .casino-form-btn {
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink));
-            color: var(--casino-black);
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
+
+        .contact-info-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            width: 100%;
-        }
-        
-        .casino-form-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-heavy);
-        }
-        
-        /* Alert Messages */
-        .casino-alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            text-align: center;
-        }
-        
-        .casino-alert-success {
-            background: rgba(34, 139, 34, 0.2);
-            border: 2px solid #228B22;
-            color: #32CD32;
-        }
-        
-        .casino-alert-error {
-            background: rgba(220, 20, 60, 0.2);
-            border: 2px solid var(--casino-red);
-            color: var(--neon-pink);
-        }
-        
-        /* Footer */
-        .casino-footer {
-            background: var(--casino-black);
-            border-top: 2px solid var(--casino-gold);
-            padding: 60px 0 30px;
-            text-align: center;
-        }
-        
-        .casino-footer-brand {
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--casino-gold);
             margin-bottom: 1rem;
         }
-        
-        .casino-footer-text {
+
+        .contact-info-text {
             color: var(--text-silver);
+            line-height: 1.6;
+        }
+
+        .contact-form-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .contact-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(0,0,0,0.95), rgba(26,26,26,0.95));
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--casino-gold);
+            border-radius: 30px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.05), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .contact-form {
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group {
             margin-bottom: 2rem;
-            font-size: 1.1rem;
         }
-        
-        .casino-footer-bottom {
-            border-top: 1px solid var(--casino-gold);
-            padding-top: 30px;
+
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            color: var(--casino-gold);
+            margin-bottom: 0.5rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            background: rgba(0,0,0,0.7);
+            border: 2px solid var(--casino-gold);
+            border-radius: 15px;
+            padding: 1rem;
+            color: var(--text-white);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control:focus {
+            background: rgba(0,0,0,0.9);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px rgba(255,20,147,0.3);
+            color: var(--text-white);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-silver);
+            opacity: 0.7;
+        }
+
+        .contact-submit-btn {
+            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink));
+            color: var(--casino-black);
+            padding: 1.5rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .contact-submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .contact-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,215,0,0.5);
+        }
+
+        .alert {
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 3;
+        }
+
+        .alert-success {
+            background: linear-gradient(45deg, rgba(0,255,65,0.2), rgba(0,255,65,0.1));
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+        }
+
+        .alert-danger {
+            background: linear-gradient(45deg, rgba(255,7,58,0.2), rgba(255,7,58,0.1));
+            color: var(--neon-red);
+            border: 2px solid var(--neon-red);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink));
+            color: var(--casino-black);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 40px rgba(255,215,0,0.5);
+            color: var(--casino-black);
+        }
+
+        .availability-section {
+            background: linear-gradient(135deg, #000000 0%, #2c0014 100%);
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .availability-card {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--casino-gold);
+            border-radius: 25px;
+            padding: 3rem;
+            margin: 0 auto;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .availability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.05), transparent);
+            animation: rotate 8s linear infinite;
+        }
+
+        .availability-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--casino-gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px var(--casino-gold);
+        }
+
+        .availability-time {
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .availability-status {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--neon-green), var(--casino-gold));
+            color: var(--casino-black);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .working-hours {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .working-hour {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            border: 1px solid var(--casino-gold);
+        }
+
+        .working-day {
+            color: var(--casino-gold);
+            font-weight: 600;
+        }
+
+        .working-time {
             color: var(--text-silver);
         }
-        
-        /* Responsive */
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .casino-hero-title {
+            .contact-hero-title {
                 font-size: 2.5rem;
             }
             
-            .casino-contact-card {
-                margin-bottom: 30px;
+            .contact-info-cards {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
             
-            .casino-form-container {
+            .contact-form-container {
                 padding: 2rem;
+            }
+            
+            .social-links {
+                gap: 1rem;
+            }
+            
+            .working-hours {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <!-- Particles Background -->
-    <div id="particles-js"></div>
+    <div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
 
-    <!-- Casino Navigation -->
-    <nav class="casino-navbar">
+    <!-- Navigation -->
+    <nav class="casino-navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <a href="../index.php" class="casino-brand">🎰 BERAT K</a>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-end">
-                        <a href="../index.php" class="casino-nav-link">Ana Sayfa</a>
-                        <a href="services.php" class="casino-nav-link">Hizmetler</a>
-                        <a href="portfolio.php" class="casino-nav-link">Portföy</a>
-                        <a href="gallery.php" class="casino-nav-link">Galeri</a>
-                        <a href="contact.php" class="casino-nav-link active">İletişim</a>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="../index.php" class="casino-brand">BERAT K</a>
+                <div class="d-flex gap-4">
+                    <a href="../index.php" class="casino-nav-item">Ana Sayfa</a>
+                    <a href="about.php" class="casino-nav-item">Hakkımda</a>
+                    <a href="services.php" class="casino-nav-item">Hizmetler</a>
+                    <a href="portfolio.php" class="casino-nav-item">Portfolyo</a>
+                    <a href="gallery.php" class="casino-nav-item">Galeri</a>
+                    <a href="contact.php" class="casino-nav-item active">İletişim</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="casino-hero">
+    <section class="contact-hero">
         <div class="container">
-            <div class="casino-hero-content" data-aos="fade-up">
-                <h1 class="casino-hero-title">💬 İLETİŞİM 💬</h1>
-                <p class="casino-hero-subtitle">
-                    Benimle iletişime geçin ve birlikte büyük kazançlar elde edelim
+            <div class="contact-hero-content">
+                <h1 class="contact-hero-title" data-aos="fade-up">
+                    <i class="fas fa-envelope"></i> İLETİŞİM
+                </h1>
+                <p class="contact-hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+                    Profesyonel Casino Yayıncılığı İçin Benimle İletişime Geçin
                 </p>
+                
+                <!-- Contact Info Cards -->
+                <div class="contact-info-cards">
+                    <div class="contact-info-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="contact-info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3 class="contact-info-title">Telefon</h3>
+                        <p class="contact-info-text">
+                            +90 555 123 4567<br>
+                            7/24 Ulaşılabilir
+                        </p>
+                    </div>
+                    
+                    <div class="contact-info-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="contact-info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="contact-info-title">E-posta</h3>
+                        <p class="contact-info-text">
+                            info@beratk.com<br>
+                            24 Saat İçinde Yanıt
+                        </p>
+                    </div>
+                    
+                    <div class="contact-info-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="contact-info-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3 class="contact-info-title">WhatsApp</h3>
+                        <p class="contact-info-text">
+                            +90 555 123 4567<br>
+                            Anında Mesajlaşma
+                        </p>
+                    </div>
+                    
+                    <div class="contact-info-card" data-aos="fade-up" data-aos-delay="600">
+                        <div class="contact-info-icon">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <h3 class="contact-info-title">Telegram</h3>
+                        <p class="contact-info-text">
+                            @BeratKCasino<br>
+                            Güvenli İletişim
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="casino-contact-section">
+    <!-- Contact Form Section -->
+    <section class="contact-form-section">
         <div class="container">
-            <div class="casino-section-title" data-aos="fade-up">
-                <h2>İLETİŞİM KANALLARI</h2>
-                <p>Casino dünyasında başarılı olmak için benimle iletişime geçin</p>
+            <div class="text-center mb-5">
+                <h2 class="casino-section-title" data-aos="fade-up">
+                    <i class="fas fa-paper-plane"></i> MESAJ GÖNDERİN
+                </h2>
+                <p class="text-silver" data-aos="fade-up" data-aos-delay="200">
+                    Hizmetlerimiz hakkında bilgi almak ve teklif istemek için formu doldurun
+                </p>
             </div>
             
-            <div class="row">
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="casino-contact-card">
-                        <div class="casino-contact-icon">
-                            <i class="fab fa-twitch"></i>
-                        </div>
-                        <h3 class="casino-contact-title">Twitch</h3>
-                        <p class="casino-contact-info">
-                            Canlı casino yayınlarımı takip edin
-                        </p>
-                        <a href="https://twitch.tv/beratk" target="_blank" class="casino-contact-link">
-                            🎮 TAKİP ET
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="400">
-                    <div class="casino-contact-card">
-                        <div class="casino-contact-icon">
-                            <i class="fab fa-youtube"></i>
-                        </div>
-                        <h3 class="casino-contact-title">YouTube</h3>
-                        <p class="casino-contact-info">
-                            Casino stratejileri ve kazanç videoları
-                        </p>
-                        <a href="https://youtube.com/@beratk" target="_blank" class="casino-contact-link">
-                            📺 İZLE
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="600">
-                    <div class="casino-contact-card">
-                        <div class="casino-contact-icon">
-                            <i class="fab fa-telegram"></i>
-                        </div>
-                        <h3 class="casino-contact-title">Telegram</h3>
-                        <p class="casino-contact-info">
-                            Özel casino ipuçları ve bonuslar
-                        </p>
-                        <a href="https://t.me/beratk" target="_blank" class="casino-contact-link">
-                            💬 KATIL
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Contact Form -->
-            <div class="casino-form-container" data-aos="fade-up" data-aos-delay="800">
-                <h3 class="casino-form-title">🎰 MESAJ GÖNDER 🎰</h3>
-                
-                <?php if ($message): ?>
-                    <div class="casino-alert casino-alert-<?php echo $messageType; ?>">
-                        <?php echo htmlspecialchars($message); ?>
+            <div class="contact-form-container" data-aos="fade-up" data-aos-delay="300">
+                <?php if ($success_message): ?>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <?php echo $success_message; ?>
                     </div>
                 <?php endif; ?>
                 
-                <form method="POST" action="">
+                <?php if ($error_message): ?>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> <?php echo $error_message; ?>
+                    </div>
+                <?php endif; ?>
+                
+                <form class="contact-form" method="POST" action="">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="casino-form-group">
-                                <label for="name" class="casino-form-label">Ad Soyad</label>
-                                <input type="text" id="name" name="name" class="casino-form-input" required>
+                            <div class="form-group">
+                                <label class="form-label" for="name">
+                                    <i class="fas fa-user"></i> Ad Soyad *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="name" 
+                                       name="name" 
+                                       value="<?php echo htmlspecialchars($name ?? ''); ?>"
+                                       placeholder="Adınızı ve soyadınızı girin"
+                                       required>
                             </div>
                         </div>
+                        
                         <div class="col-md-6">
-                            <div class="casino-form-group">
-                                <label for="email" class="casino-form-label">E-posta</label>
-                                <input type="email" id="email" name="email" class="casino-form-input" required>
+                            <div class="form-group">
+                                <label class="form-label" for="email">
+                                    <i class="fas fa-envelope"></i> E-posta *
+                                </label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       name="email" 
+                                       value="<?php echo htmlspecialchars($email ?? ''); ?>"
+                                       placeholder="E-posta adresinizi girin"
+                                       required>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="casino-form-group">
-                        <label for="subject" class="casino-form-label">Konu</label>
-                        <input type="text" id="subject" name="subject" class="casino-form-input" required>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="phone">
+                                    <i class="fas fa-phone"></i> Telefon
+                                </label>
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="phone" 
+                                       name="phone" 
+                                       value="<?php echo htmlspecialchars($phone ?? ''); ?>"
+                                       placeholder="Telefon numaranızı girin">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="subject">
+                                    <i class="fas fa-tag"></i> Konu *
+                                </label>
+                                <select class="form-control" id="subject" name="subject" required>
+                                    <option value="">Konu seçin</option>
+                                    <option value="Casino Yayıncılığı" <?php echo ($subject ?? '') === 'Casino Yayıncılığı' ? 'selected' : ''; ?>>Casino Yayıncılığı</option>
+                                    <option value="Dijital Pazarlama" <?php echo ($subject ?? '') === 'Dijital Pazarlama' ? 'selected' : ''; ?>>Dijital Pazarlama</option>
+                                    <option value="Telegram Yönetimi" <?php echo ($subject ?? '') === 'Telegram Yönetimi' ? 'selected' : ''; ?>>Telegram Yönetimi</option>
+                                    <option value="İş Ortaklığı" <?php echo ($subject ?? '') === 'İş Ortaklığı' ? 'selected' : ''; ?>>İş Ortaklığı</option>
+                                    <option value="Diğer" <?php echo ($subject ?? '') === 'Diğer' ? 'selected' : ''; ?>>Diğer</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="casino-form-group">
-                        <label for="message" class="casino-form-label">Mesaj</label>
-                        <textarea id="message" name="message" class="casino-form-textarea" required></textarea>
+                    <div class="form-group">
+                        <label class="form-label" for="message">
+                            <i class="fas fa-comment"></i> Mesaj *
+                        </label>
+                        <textarea class="form-control" 
+                                  id="message" 
+                                  name="message" 
+                                  rows="5" 
+                                  placeholder="Mesajınızı detaylı bir şekilde yazın..."
+                                  required><?php echo htmlspecialchars($message ?? ''); ?></textarea>
                     </div>
                     
-                    <button type="submit" class="casino-form-btn">
-                        🎰 MESAJ GÖNDER 🎰
+                    <button type="submit" class="contact-submit-btn">
+                        <i class="fas fa-rocket"></i> Mesaj Gönder
                     </button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="casino-footer">
+    <!-- Availability Section -->
+    <section class="availability-section">
         <div class="container">
-            <div class="casino-footer-brand">🎰 BERAT K 🎰</div>
-            <p class="casino-footer-text">
-                Profesyonel Casino Yayıncısı & Dijital Pazarlama Uzmanı
-            </p>
-            
-            <div class="casino-footer-bottom">
-                <p>&copy; 2024 BERAT K - Casino Yayıncılığında Lider 🎲</p>
+            <div class="availability-card" data-aos="fade-up">
+                <h2 class="availability-title">
+                    <i class="fas fa-clock"></i> MÜSAİTLİK DURUMU
+                </h2>
+                <div class="availability-time">
+                    Şu anda: <span id="currentTime"></span>
+                </div>
+                <div class="availability-status">
+                    <i class="fas fa-circle" style="color: #00ff41;"></i> AKTİF
+                </div>
+                
+                <div class="working-hours">
+                    <div class="working-hour">
+                        <span class="working-day">Pazartesi</span>
+                        <span class="working-time">09:00 - 18:00</span>
+                    </div>
+                    <div class="working-hour">
+                        <span class="working-day">Salı</span>
+                        <span class="working-time">09:00 - 18:00</span>
+                    </div>
+                    <div class="working-hour">
+                        <span class="working-day">Çarşamba</span>
+                        <span class="working-time">09:00 - 18:00</span>
+                    </div>
+                    <div class="working-hour">
+                        <span class="working-day">Perşembe</span>
+                        <span class="working-time">09:00 - 18:00</span>
+                    </div>
+                    <div class="working-hour">
+                        <span class="working-day">Cuma</span>
+                        <span class="working-time">09:00 - 18:00</span>
+                    </div>
+                    <div class="working-hour">
+                        <span class="working-day">Cumartesi</span>
+                        <span class="working-time">10:00 - 16:00</span>
+                    </div>
+                    <div class="working-hour">
+                        <span class="working-day">Pazar</span>
+                        <span class="working-time">Kapalı</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    <!-- Social Links -->
+    <section class="casino-section text-center" style="padding: 5rem 0;">
+        <div class="container">
+            <h2 class="casino-section-title" data-aos="fade-up">
+                <i class="fas fa-share-alt"></i> SOSYAL MEDYA
+            </h2>
+            <p class="text-silver" data-aos="fade-up" data-aos-delay="200">
+                Beni sosyal medya hesaplarımdan takip edin
+            </p>
+            
+            <div class="social-links" data-aos="fade-up" data-aos-delay="300">
+                <a href="#" class="social-link" target="_blank" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" class="social-link" target="_blank" title="Twitch">
+                    <i class="fab fa-twitch"></i>
+                </a>
+                <a href="#" class="social-link" target="_blank" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link" target="_blank" title="Telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="#" class="social-link" target="_blank" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--casino-black); font-size: 1.5rem; text-decoration: none; box-shadow: 0 10px 30px rgba(255,215,0,0.3); transition: all 0.3s ease; z-index: 1000;">
+        <i class="fas fa-arrow-up"></i>
+    </a>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../assets/js/casino-enhanced.js"></script>
     
     <script>
         // Initialize AOS
         AOS.init({
             duration: 1000,
-            once: true,
-            offset: 100
+            easing: 'ease-in-out',
+            once: true
         });
-        
-        // Particles.js Configuration
+
+        // Initialize Particles
         particlesJS('particles-js', {
             particles: {
-                number: {
-                    value: 60,
-                    density: {
-                        enable: true,
-                        value_area: 800
-                    }
-                },
-                color: {
-                    value: ['#FFD700', '#DC143C', '#FF1493', '#00FFFF']
-                },
-                shape: {
-                    type: 'circle'
-                },
-                opacity: {
-                    value: 0.5,
-                    random: false
-                },
-                size: {
-                    value: 3,
-                    random: true
-                },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: '#FFD700',
-                    opacity: 0.4,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 6,
-                    direction: 'none',
-                    random: false,
-                    straight: false,
-                    out_mode: 'out',
-                    bounce: false
-                }
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: ['#FFD700', '#FF1493', '#00FFFF', '#8A2BE2', '#FF8C00', '#00FF41'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.6, random: true },
+                size: { value: 2, random: true },
+                line_linked: { enable: true, distance: 150, color: '#FFD700', opacity: 0.3, width: 1 },
+                move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
             },
             interactivity: {
                 detect_on: 'canvas',
                 events: {
-                    onhover: {
-                        enable: true,
-                        mode: 'repulse'
-                    },
-                    onclick: {
-                        enable: true,
-                        mode: 'push'
-                    },
-                    resize: true
-                },
-                modes: {
-                    repulse: {
-                        distance: 200,
-                        duration: 0.4
-                    },
-                    push: {
-                        particles_nb: 4
-                    }
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' }
                 }
-            },
-            retina_detect: true
-        });
-        
-        // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const subject = document.getElementById('subject').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            if (!name || !email || !subject || !message) {
-                e.preventDefault();
-                alert('Lütfen tüm alanları doldurun.');
-                return;
-            }
-            
-            if (!email.includes('@') || !email.includes('.')) {
-                e.preventDefault();
-                alert('Geçerli bir e-posta adresi girin.');
-                return;
             }
         });
+
+        // Back to top
+        document.querySelector('.back-to-top').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('tr-TR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        // Update time every second
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime();
+
+        // Form validation and effects
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 10px 30px rgba(255,215,0,0.2)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Contact form submission effects
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.contact-submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gönderiliyor...';
+            submitBtn.disabled = true;
+        });
+
+        // Contact info cards hover effects
+        document.querySelectorAll('.contact-info-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Social links hover effects
+        document.querySelectorAll('.social-link').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.1)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 300);
+            });
+        }, 5000);
     </script>
 </body>
 </html>

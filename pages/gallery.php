@@ -7,7 +7,7 @@ $db = new Database();
 
 // Get all active gallery items with error handling
 try {
-    $gallery = $db->findAll('gallery', ['status' => 'active'], 'order_position ASC') ?? [];
+    $gallery = $db->findAll('gallery', ['status' => 'active'], 'sort_order ASC') ?? [];
 } catch (Exception $e) {
     $gallery = [];
 }

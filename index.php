@@ -7,15 +7,15 @@ $db = new Database();
 
 // Get data with error handling
 try {
-    $services = $db->findAll('services', ['status' => 'active'], 'order_position ASC') ?? [];
-    $portfolio = $db->findAll('portfolio', ['status' => 'active'], 'order_position ASC LIMIT 6') ?? [];
-    $gallery = $db->findAll('gallery', ['status' => 'active'], 'order_position ASC LIMIT 8') ?? [];
+    $services = $db->findAll('services', ['status' => 'active'], 'sort_order ASC') ?? [];
+    $portfolio = $db->findAll('portfolio', ['status' => 'active'], 'sort_order ASC LIMIT 6') ?? [];
+    $gallery = $db->findAll('gallery', ['status' => 'active'], 'sort_order ASC LIMIT 8') ?? [];
     
     $settings = [];
     $settingsData = $db->findAll('settings', ['status' => 'active']) ?? [];
     foreach ($settingsData as $setting) {
-        if (isset($setting['key']) && isset($setting['value'])) {
-            $settings[$setting['key']] = $setting['value'];
+        if (isset($setting['setting_key']) && isset($setting['setting_value'])) {
+            $settings[$setting['setting_key']] = $setting['setting_value'];
         }
     }
 } catch (Exception $e) {
@@ -48,6 +48,12 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts - Orbitron for Casino Theme -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Enhanced Casino Theme CSS -->
+    <link href="assets/css/casino-enhanced.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- AOS Animation -->
@@ -880,9 +886,9 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
                     <?php foreach ($gallery as $index => $item): ?>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
                             <div class="casino-gallery-item">
-                                <?php if (!empty($item['image'])): ?>
-                                    <img src="uploads/gallery/<?php echo htmlspecialchars($item['image']); ?>" 
-                                         alt="<?php echo htmlspecialchars($item['title'] ?? ''); ?>" 
+                                <?php if (!empty($item['file_path'])): ?>
+                                    <img src="uploads/gallery/<?php echo htmlspecialchars($item['file_path']); ?>" 
+                                         alt="<?php echo htmlspecialchars($item['title'] ?? 'Galeri GÃ¶rseli'); ?>" 
                                          class="casino-gallery-image">
                                 <?php else: ?>
                                     <div class="casino-gallery-image" style="background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink)); display: flex; align-items: center; justify-content: center;">
@@ -1187,5 +1193,8 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             btn.addEventListener('click', playSlotSound);
         });
     </script>
+    
+    <!-- Enhanced Casino JavaScript -->
+    <script src="assets/js/casino-enhanced.js"></script>
 </body>
 </html>

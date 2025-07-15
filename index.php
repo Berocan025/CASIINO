@@ -94,6 +94,240 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
             overflow-x: hidden;
         }
         
+        /* Enhanced Hero Section */
+        .casino-hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .hero-avatar {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        
+        .avatar-glow {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            border: 2px solid var(--casino-gold);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px var(--casino-gold); }
+            to { box-shadow: 0 0 40px var(--casino-gold), 0 0 60px var(--casino-gold); }
+        }
+        
+        .text-gradient {
+            background: linear-gradient(45deg, var(--casino-gold), var(--neon-pink), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 4rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-silver);
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            color: var(--casino-gold);
+            font-weight: 600;
+        }
+        
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .badge-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .badge-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .badge-item i {
+            margin-right: 0.5rem;
+            color: var(--casino-gold);
+        }
+        
+        .casino-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .casino-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .casino-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .casino-stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--casino-gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .casino-stat-label {
+            color: var(--text-silver);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .casino-btn-outline {
+            background: transparent;
+            color: var(--casino-gold);
+            border: 2px solid var(--casino-gold);
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            margin: 0.5rem;
+        }
+        
+        .casino-btn-outline:hover {
+            background: var(--casino-gold);
+            color: var(--casino-black);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--casino-gold);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            background: var(--casino-gold);
+            color: var(--casino-black);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--casino-gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .text-gradient {
+                font-size: 2.5rem;
+            }
+            
+            .hero-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .casino-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .casino-stat-number {
+                font-size: 2rem;
+            }
+        }
+        
         /* Particles Background */
         #particles-js {
             position: fixed;
@@ -752,15 +986,16 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <a href="#home" class="casino-brand">BERAT K</a>
+                    <a href="index.php" class="casino-brand">BERAT K</a>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-end">
-                        <a href="#home" class="casino-nav-link active">Ana Sayfa</a>
-                        <a href="#services" class="casino-nav-link">Hizmetler</a>
-                        <a href="#portfolio" class="casino-nav-link">Portföy</a>
-                        <a href="#gallery" class="casino-nav-link">Galeri</a>
-                        <a href="#contact" class="casino-nav-link">İletişim</a>
+                        <a href="index.php" class="casino-nav-link active">Ana Sayfa</a>
+                        <a href="pages/about.php" class="casino-nav-link">Hakkımda</a>
+                        <a href="pages/services.php" class="casino-nav-link">Hizmetler</a>
+                        <a href="pages/portfolio.php" class="casino-nav-link">Portfolyo</a>
+                        <a href="pages/gallery.php" class="casino-nav-link">Galeri</a>
+                        <a href="pages/contact.php" class="casino-nav-link">İletişim</a>
                     </div>
                 </div>
             </div>
@@ -768,43 +1003,98 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     </nav>
 
     <!-- Casino Hero Section -->
-    <section id="home" class="casino-hero">
+    <section class="casino-hero">
+        <div class="hero-particles"></div>
         <div class="container">
             <div class="casino-hero-content" data-aos="fade-up">
-                <h1 class="casino-hero-title">CASINO YAYINCISI</h1>
-                <p class="casino-hero-subtitle">Profesyonel Casino Streaming & Dijital Pazarlama</p>
+                <div class="hero-avatar" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="assets/images/avatar.svg" alt="BERAT K" class="avatar-img">
+                    <div class="avatar-glow"></div>
+                </div>
+                
+                <h1 class="casino-hero-title">
+                    <span class="text-gradient">BERAT K</span>
+                    <span class="hero-subtitle">CASINO YAYINCISI</span>
+                </h1>
+                
+                <p class="casino-hero-subtitle">
+                    Profesyonel Casino Streaming & Dijital Pazarlama ile 
+                    <span class="highlight">başarıya ulaşın!</span>
+                </p>
+                
+                <div class="hero-badges" data-aos="fade-up" data-aos-delay="300">
+                    <span class="badge-item">
+                        <i class="fas fa-trophy"></i>
+                        En İyi Yayıncı
+                    </span>
+                    <span class="badge-item">
+                        <i class="fas fa-star"></i>
+                        5 Yıl Deneyim
+                    </span>
+                    <span class="badge-item">
+                        <i class="fas fa-users"></i>
+                        100K+ Takipçi
+                    </span>
+                </div>
                 
                 <div class="casino-stats">
-                    <div class="casino-stat" data-aos="fade-up" data-aos-delay="200">
-                        <span class="casino-stat-number">100K+</span>
+                    <div class="casino-stat" data-aos="fade-up" data-aos-delay="400">
+                        <span class="casino-stat-number" data-count="100000">0</span>
                         <span class="casino-stat-label">Takipçi</span>
                     </div>
-                    <div class="casino-stat" data-aos="fade-up" data-aos-delay="400">
-                        <span class="casino-stat-number">2000+</span>
+                    <div class="casino-stat" data-aos="fade-up" data-aos-delay="500">
+                        <span class="casino-stat-number" data-count="2000">0</span>
                         <span class="casino-stat-label">Canlı Yayın</span>
                     </div>
                     <div class="casino-stat" data-aos="fade-up" data-aos-delay="600">
-                        <span class="casino-stat-number">5+</span>
+                        <span class="casino-stat-number" data-count="5">0</span>
                         <span class="casino-stat-label">Yıl Deneyim</span>
+                    </div>
+                    <div class="casino-stat" data-aos="fade-up" data-aos-delay="700">
+                        <span class="casino-stat-number" data-count="50">0</span>
+                        <span class="casino-stat-label">Başarılı Proje</span>
                     </div>
                 </div>
                 
                 <div class="casino-buttons">
-                    <a href="#services" class="casino-btn casino-btn-primary" data-aos="fade-up" data-aos-delay="800">
-                        <i class="fas fa-play me-2"></i>
-                        Hizmetlerim
+                    <a href="pages/services.php" class="casino-btn casino-btn-primary" data-aos="fade-up" data-aos-delay="800">
+                        <i class="fas fa-rocket me-2"></i>
+                        Hizmetlerimi Keşfet
                     </a>
-                    <a href="#contact" class="casino-btn casino-btn-secondary" data-aos="fade-up" data-aos-delay="1000">
+                    <a href="pages/contact.php" class="casino-btn casino-btn-secondary" data-aos="fade-up" data-aos-delay="900">
                         <i class="fas fa-envelope me-2"></i>
-                        İletişim
+                        İletişime Geç
+                    </a>
+                    <a href="pages/about.php" class="casino-btn casino-btn-outline" data-aos="fade-up" data-aos-delay="1000">
+                        <i class="fas fa-user me-2"></i>
+                        Hakkımda
+                    </a>
+                </div>
+                
+                <div class="social-links" data-aos="fade-up" data-aos-delay="1100">
+                    <a href="https://twitch.tv/beratk" class="social-link" target="_blank">
+                        <i class="fab fa-twitch"></i>
+                    </a>
+                    <a href="https://youtube.com/@beratk" class="social-link" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://instagram.com/beratk" class="social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://discord.gg/beratk" class="social-link" target="_blank">
+                        <i class="fab fa-discord"></i>
                     </a>
                 </div>
             </div>
         </div>
+        
+        <div class="hero-scroll-indicator" data-aos="bounce" data-aos-delay="1200">
+            <i class="fas fa-chevron-down"></i>
+        </div>
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="casino-section">
+    <section class="casino-section">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
                 <h2>HİZMETLERİM</h2>
@@ -834,7 +1124,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     </section>
 
     <!-- Portfolio Section -->
-    <section id="portfolio" class="casino-section" style="background: linear-gradient(135deg, var(--casino-dark) 0%, var(--casino-black) 100%);">
+    <section class="casino-section" style="background: linear-gradient(135deg, var(--casino-dark) 0%, var(--casino-black) 100%);">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
                 <h2>PORTFÖYÜM</h2>
@@ -874,7 +1164,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="casino-section">
+    <section class="casino-section">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
                 <h2>GALERİ</h2>
@@ -911,7 +1201,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="casino-section casino-contact-section">
+    <section class="casino-section casino-contact-section">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
                 <h2>İLETİŞİM</h2>
@@ -1110,43 +1400,101 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
             }, 1000);
         });
         
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+        // Navigation is now handled by separate pages
+        // Smooth scrolling and active nav link detection removed
         
-        // Active nav link
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.casino-nav-link');
+        // Enhanced Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.casino-stat-number[data-count]');
             
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-count'));
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 50); // 50ms intervals
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    
+                    // Format number with K suffix for large numbers
+                    let displayValue = Math.floor(current);
+                    if (displayValue >= 1000) {
+                        displayValue = Math.floor(displayValue / 1000) + 'K+';
+                    } else if (displayValue >= 100) {
+                        displayValue = displayValue + '+';
+                    }
+                    
+                    counter.textContent = displayValue;
+                }, 50);
             });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        });
+        }
         
-        // Counter animation
+        // Trigger counter animation when hero section is visible
+        const heroSection = document.querySelector('.casino-hero');
+        if (heroSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            observer.observe(heroSection);
+        }
+        
+        // Hero scroll indicator click
+        const scrollIndicator = document.querySelector('.hero-scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                const nextSection = document.querySelector('.casino-section');
+                if (nextSection) {
+                    nextSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+        
+        // Particle animation for hero section
+        function createHeroParticles() {
+            const particleContainer = document.querySelector('.hero-particles');
+            if (!particleContainer) return;
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'hero-particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    width: ${Math.random() * 4 + 2}px;
+                    height: ${Math.random() * 4 + 2}px;
+                    background: ${Math.random() > 0.5 ? '#FFD700' : '#FF1493'};
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation: float ${Math.random() * 3 + 2}s infinite ease-in-out;
+                    animation-delay: ${Math.random() * 2}s;
+                `;
+                particleContainer.appendChild(particle);
+            }
+        }
+        
+        // CSS for particle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+                50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize hero particles
+        createHeroParticles();
+        
+        // Counter animation (legacy support)
         function animateCounters() {
             const counters = document.querySelectorAll('.casino-stat-number');
             counters.forEach(counter => {

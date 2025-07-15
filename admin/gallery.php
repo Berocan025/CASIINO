@@ -91,7 +91,7 @@ $totalPaginationPages = ceil($totalGallery / $perPage);
 
 // Get gallery items
 $gallery = $db->query(
-    "SELECT * FROM gallery" . $whereClause . " ORDER BY order_position ASC, created_at DESC LIMIT ? OFFSET ?",
+            "SELECT * FROM gallery" . $whereClause . " ORDER BY sort_order ASC, created_at DESC LIMIT ? OFFSET ?",
     array_merge($params, [$perPage, $offset])
 )->fetchAll();
 
@@ -105,7 +105,7 @@ function saveGallery($data, $files) {
     $description = sanitizeInput($data['description'] ?? '');
     $alt_text = sanitizeInput($data['alt_text'] ?? '');
     $status = sanitizeInput($data['status'] ?? 'active');
-    $order_position = (int)($data['order_position'] ?? 0);
+    $sort_order = (int)($data['sort_order'] ?? 0);
     $gallery_id = (int)($data['gallery_id'] ?? 0);
     
     if (empty($title)) {
@@ -117,7 +117,7 @@ function saveGallery($data, $files) {
         'description' => $description,
         'alt_text' => $alt_text,
         'status' => $status,
-        'order_position' => $order_position,
+        'sort_order' => $sort_order,
         'updated_at' => date('Y-m-d H:i:s')
     ];
     
@@ -125,13 +125,13 @@ function saveGallery($data, $files) {
     if (isset($files['image']) && $files['image']['error'] === UPLOAD_ERR_OK) {
         $imageUpload = uploadGalleryImage($files['image']);
         if ($imageUpload['success']) {
-            $galleryData['image'] = $imageUpload['filename'];
+            $galleryData['file_path'] = $imageUpload['filename'];
             
             // Delete old image if updating
             if ($gallery_id > 0) {
                 $oldGallery = $db->find('gallery', ['id' => $gallery_id]);
-                if ($oldGallery && $oldGallery['image']) {
-                    $oldImagePath = '../uploads/gallery/' . $oldGallery['image'];
+                if ($oldGallery && $oldGallery['file_path']) {
+                    $oldImagePath = '../uploads/gallery/' . $oldGallery['file_path'];
                     if (file_exists($oldImagePath)) {
                         unlink($oldImagePath);
                     }
@@ -243,7 +243,7 @@ function reorderGallery($gallery) {
     
     try {
         foreach ($gallery as $index => $gallery_id) {
-            $db->update('gallery', ['order_position' => $index + 1], ['id' => $gallery_id]);
+            $db->update('gallery', ['sort_order' => $index + 1], ['id' => $gallery_id]);
         }
         
         $db->commit();
@@ -671,13 +671,13 @@ function getGallery($gallery_id) {
                                     </div>
                                     
                                     <div class="position-relative">
-                                        <img src="../uploads/gallery/<?php echo htmlspecialchars($item['image']); ?>" 
-                                             alt="<?php echo htmlspecialchars($item['alt_text'] ?: $item['title']); ?>" 
-                                             class="gallery-image">
-                                        
-                                        <div class="image-overlay">
-                                            <div class="overlay-actions">
-                                                <button class="btn overlay-btn" onclick="viewImage('<?php echo htmlspecialchars($item['image']); ?>', '<?php echo htmlspecialchars($item['title']); ?>')" title="Görüntüle">
+                                                                <img src="../uploads/gallery/<?php echo htmlspecialchars($item['file_path']); ?>" 
+                             alt="<?php echo htmlspecialchars($item['alt_text'] ?: $item['title']); ?>" 
+                             class="gallery-image">
+                        
+                        <div class="image-overlay">
+                            <div class="overlay-actions">
+                                <button class="btn overlay-btn" onclick="viewImage('<?php echo htmlspecialchars($item['file_path']); ?>', '<?php echo htmlspecialchars($item['title']); ?>')" title="Görüntüle">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                                 <button class="btn overlay-btn" onclick="editGallery(<?php echo $item['id']; ?>)" title="Düzenle">
@@ -799,7 +799,7 @@ function getGallery($gallery_id) {
                                                 <i class="fas fa-sort me-2"></i>
                                                 Sıra
                                             </label>
-                                            <input type="number" class="form-control" id="galleryOrder" name="order_position" min="0" value="0">
+                                            <input type="number" class="form-control" id="galleryOrder" name="sort_order" min="0" value="0">
                                         </div>
                                     </div>
                                 </div>
@@ -957,10 +957,10 @@ function getGallery($gallery_id) {
                     $('#galleryDescription').val(gallery.description);
                     $('#galleryAltText').val(gallery.alt_text);
                     $('#galleryStatus').val(gallery.status);
-                    $('#galleryOrder').val(gallery.order_position);
+                    $('#galleryOrder').val(gallery.sort_order);
                     
-                    if (gallery.image) {
-                        $('#imagePreview').attr('src', '../uploads/gallery/' + gallery.image).addClass('show');
+                    if (gallery.file_path) {
+                        $('#imagePreview').attr('src', '../uploads/gallery/' + gallery.file_path).addClass('show');
                     } else {
                         $('#imagePreview').removeClass('show');
                     }

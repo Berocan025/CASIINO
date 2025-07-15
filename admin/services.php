@@ -87,7 +87,7 @@ $totalPaginationPages = ceil($totalServices / $perPage);
 
 // Get services
 $services = $db->query(
-    "SELECT * FROM services" . $whereClause . " ORDER BY order_position ASC, created_at DESC LIMIT ? OFFSET ?",
+            "SELECT * FROM services" . $whereClause . " ORDER BY sort_order ASC, created_at DESC LIMIT ? OFFSET ?",
     array_merge($params, [$perPage, $offset])
 )->fetchAll();
 
@@ -107,7 +107,7 @@ function saveService($data) {
     $description = sanitizeInput($data['description'] ?? '');
     $icon = sanitizeInput($data['icon'] ?? '');
     $status = sanitizeInput($data['status'] ?? 'active');
-    $order_position = (int)($data['order_position'] ?? 0);
+    $sort_order = (int)($data['sort_order'] ?? 0);
     $service_id = (int)($data['service_id'] ?? 0);
     
     if (empty($title)) {
@@ -123,7 +123,7 @@ function saveService($data) {
         'description' => $description,
         'icon' => $icon,
         'status' => $status,
-        'order_position' => $order_position,
+        'sort_order' => $sort_order,
         'updated_at' => date('Y-m-d H:i:s')
     ];
     
@@ -185,7 +185,7 @@ function reorderServices($services) {
     
     try {
         foreach ($services as $index => $service_id) {
-            $db->update('services', ['order_position' => $index + 1], ['id' => $service_id]);
+            $db->update('services', ['sort_order' => $index + 1], ['id' => $service_id]);
         }
         
         $db->commit();
@@ -674,7 +674,7 @@ function reorderServices($services) {
                                         <i class="fas fa-sort me-2"></i>
                                         Sıra
                                     </label>
-                                    <input type="number" class="form-control" id="serviceOrder" name="order_position" min="0" value="0">
+                                    <input type="number" class="form-control" id="serviceOrder" name="sort_order" min="0" value="0">
                                 </div>
                             </div>
                         </div>
@@ -805,7 +805,7 @@ function reorderServices($services) {
                     $('#serviceDescription').val(service.description);
                     $('#serviceIcon').val(service.icon);
                     $('#serviceStatus').val(service.status);
-                    $('#serviceOrder').val(service.order_position);
+                    $('#serviceOrder').val(service.sort_order);
                     
                     updateIconPreview(service.icon);
                     $('.icon-option').removeClass('selected');

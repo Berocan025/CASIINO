@@ -413,42 +413,42 @@ $admin_email = $_SESSION['admin_email'] ?? '';
             </div>
             
             <div class="nav-item">
-                <a href="pages/index.php" class="nav-link <?= $current_page === 'pages' ? 'active' : '' ?>">
+                <a href="pages.php" class="nav-link <?= $current_page === 'pages' ? 'active' : '' ?>">
                     <i class="fas fa-file-alt nav-icon"></i>
                     <span class="nav-text">Sayfa Yönetimi</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="services/index.php" class="nav-link <?= $current_page === 'services' ? 'active' : '' ?>">
+                <a href="services.php" class="nav-link <?= $current_page === 'services' ? 'active' : '' ?>">
                     <i class="fas fa-cogs nav-icon"></i>
                     <span class="nav-text">Hizmetler</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="portfolio/index.php" class="nav-link <?= $current_page === 'portfolio' ? 'active' : '' ?>">
+                <a href="portfolio.php" class="nav-link <?= $current_page === 'portfolio' ? 'active' : '' ?>">
                     <i class="fas fa-briefcase nav-icon"></i>
                     <span class="nav-text">Portföy</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="gallery/index.php" class="nav-link <?= $current_page === 'gallery' ? 'active' : '' ?>">
+                <a href="gallery.php" class="nav-link <?= $current_page === 'gallery' ? 'active' : '' ?>">
                     <i class="fas fa-images nav-icon"></i>
                     <span class="nav-text">Galeri</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="messages/index.php" class="nav-link <?= $current_page === 'messages' ? 'active' : '' ?>">
+                <a href="messages.php" class="nav-link <?= $current_page === 'messages' ? 'active' : '' ?>">
                     <i class="fas fa-envelope nav-icon"></i>
                     <span class="nav-text">Mesajlar</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="settings/index.php" class="nav-link <?= $current_page === 'settings' ? 'active' : '' ?>">
+                <a href="settings.php" class="nav-link <?= $current_page === 'settings' ? 'active' : '' ?>">
                     <i class="fas fa-cog nav-icon"></i>
                     <span class="nav-text">Ayarlar</span>
                 </a>
@@ -495,7 +495,7 @@ $admin_email = $_SESSION['admin_email'] ?? '';
                         <i class="fas fa-user"></i>
                         Profil
                     </a>
-                    <a href="settings/index.php" class="dropdown-item">
+                    <a href="settings.php" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         Ayarlar
                     </a>

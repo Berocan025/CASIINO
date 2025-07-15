@@ -91,7 +91,7 @@ $totalPaginationPages = ceil($totalPortfolio / $perPage);
 
 // Get portfolio items
 $portfolio = $db->query(
-    "SELECT * FROM portfolio" . $whereClause . " ORDER BY order_position ASC, created_at DESC LIMIT ? OFFSET ?",
+            "SELECT * FROM portfolio" . $whereClause . " ORDER BY sort_order ASC, created_at DESC LIMIT ? OFFSET ?",
     array_merge($params, [$perPage, $offset])
 )->fetchAll();
 
@@ -107,7 +107,7 @@ function savePortfolio($data, $files) {
     $project_url = sanitizeInput($data['project_url'] ?? '');
     $technologies = sanitizeInput($data['technologies'] ?? '');
     $status = sanitizeInput($data['status'] ?? 'active');
-    $order_position = (int)($data['order_position'] ?? 0);
+    $sort_order = (int)($data['sort_order'] ?? 0);
     $portfolio_id = (int)($data['portfolio_id'] ?? 0);
     
     if (empty($title)) {
@@ -121,7 +121,7 @@ function savePortfolio($data, $files) {
         'project_url' => $project_url,
         'technologies' => $technologies,
         'status' => $status,
-        'order_position' => $order_position,
+        'sort_order' => $sort_order,
         'updated_at' => date('Y-m-d H:i:s')
     ];
     
@@ -244,7 +244,7 @@ function reorderPortfolio($portfolio) {
     
     try {
         foreach ($portfolio as $index => $portfolio_id) {
-            $db->update('portfolio', ['order_position' => $index + 1], ['id' => $portfolio_id]);
+            $db->update('portfolio', ['sort_order' => $index + 1], ['id' => $portfolio_id]);
         }
         
         $db->commit();
@@ -821,7 +821,7 @@ function getPortfolio($portfolio_id) {
                                         <i class="fas fa-sort me-2"></i>
                                         Sıra
                                     </label>
-                                    <input type="number" class="form-control" id="portfolioOrder" name="order_position" min="0" value="0">
+                                    <input type="number" class="form-control" id="portfolioOrder" name="sort_order" min="0" value="0">
                                 </div>
                                 
                                 <div class="mb-3">
@@ -962,7 +962,7 @@ function getPortfolio($portfolio_id) {
                     $('#portfolioUrl').val(portfolio.project_url);
                     $('#portfolioTechnologies').val(portfolio.technologies);
                     $('#portfolioStatus').val(portfolio.status);
-                    $('#portfolioOrder').val(portfolio.order_position);
+                    $('#portfolioOrder').val(portfolio.sort_order);
                     
                     if (portfolio.image) {
                         $('#imagePreview').attr('src', '../uploads/portfolio/' + portfolio.image).addClass('show');

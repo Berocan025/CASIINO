@@ -120,3 +120,21 @@
 [Mon Jul 14 23:54:02 2025] [::1]:55060 Accepted
 [Mon Jul 14 23:54:02 2025] [::1]:55060 [200]: GET /admin/login.php
 [Mon Jul 14 23:54:02 2025] [::1]:55060 Closing
+[Tue Jul 15 00:04:21 2025] [::1]:46004 Accepted
+[Tue Jul 15 00:04:21 2025] [::1]:46004 [200]: GET /
+[Tue Jul 15 00:04:21 2025] [::1]:46004 Closing
+[Tue Jul 15 00:10:18 2025] [::1]:51298 Accepted
+[Tue Jul 15 00:10:18 2025] [::1]:51298 [200]: GET /
+[Tue Jul 15 00:10:18 2025] [::1]:51298 Closing
+[Tue Jul 15 00:10:18 2025] [::1]:51310 Accepted
+[Tue Jul 15 00:10:18 2025] [::1]:51310 [200]: GET /pages/services.php
+[Tue Jul 15 00:10:18 2025] [::1]:51310 Closing
+[Tue Jul 15 00:10:18 2025] [::1]:51314 Accepted
+[Tue Jul 15 00:10:18 2025] [::1]:51314 [200]: GET /pages/portfolio.php
+[Tue Jul 15 00:10:18 2025] [::1]:51314 Closing
+[Tue Jul 15 00:10:18 2025] [::1]:51328 Accepted
+[Tue Jul 15 00:10:18 2025] [::1]:51328 [200]: GET /pages/gallery.php
+[Tue Jul 15 00:10:18 2025] [::1]:51328 Closing
+[Tue Jul 15 00:10:18 2025] [::1]:51342 Accepted
+[Tue Jul 15 00:10:18 2025] [::1]:51342 [200]: GET /pages/contact.php
+[Tue Jul 15 00:10:18 2025] [::1]:51342 Closing

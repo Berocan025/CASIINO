@@ -103,7 +103,7 @@ function savePortfolio($data, $files) {
     
     $title = sanitizeInput($data['title'] ?? '');
     $description = sanitizeInput($data['description'] ?? '');
-    $client = sanitizeInput($data['client'] ?? '');
+    $client_name = sanitizeInput($data['client_name'] ?? '');
     $project_url = sanitizeInput($data['project_url'] ?? '');
     $technologies = sanitizeInput($data['technologies'] ?? '');
     $status = sanitizeInput($data['status'] ?? 'active');
@@ -117,7 +117,7 @@ function savePortfolio($data, $files) {
     $portfolioData = [
         'title' => $title,
         'description' => $description,
-        'client' => $client,
+        'client_name' => $client_name,
         'project_url' => $project_url,
         'technologies' => $technologies,
         'status' => $status,
@@ -665,11 +665,11 @@ function getPortfolio($portfolio_id) {
                                             <div class="portfolio-description"><?php echo htmlspecialchars($item['description']); ?></div>
                                         <?php endif; ?>
                                         
-                                        <?php if ($item['client']): ?>
+                                        <?php if ($item['client_name']): ?>
                                             <div class="mb-2">
                                                 <small class="text-muted">
                                                     <i class="fas fa-user me-1"></i>
-                                                    <?php echo htmlspecialchars($item['client']); ?>
+                                                    <?php echo htmlspecialchars($item['client_name']); ?>
                                                 </small>
                                             </div>
                                         <?php endif; ?>
@@ -780,7 +780,7 @@ function getPortfolio($portfolio_id) {
                                                 <i class="fas fa-user me-2"></i>
                                                 Müşteri/İşveren
                                             </label>
-                                            <input type="text" class="form-control" id="portfolioClient" name="client">
+                                            <input type="text" class="form-control" id="portfolioClient" name="client_name">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -958,7 +958,7 @@ function getPortfolio($portfolio_id) {
                     $('#portfolioId').val(portfolio.id);
                     $('#portfolioTitle').val(portfolio.title);
                     $('#portfolioDescription').val(portfolio.description);
-                    $('#portfolioClient').val(portfolio.client);
+                    $('#portfolioClient').val(portfolio.client_name);
                     $('#portfolioUrl').val(portfolio.project_url);
                     $('#portfolioTechnologies').val(portfolio.technologies);
                     $('#portfolioStatus').val(portfolio.status);

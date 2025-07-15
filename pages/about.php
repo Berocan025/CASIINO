@@ -2,6 +2,7 @@
 require_once '../includes/config.php';
 require_once '../includes/database.php';
 require_once '../includes/functions.php';
+require_once '../includes/page_functions.php';
 
 $db = new Database();
 
@@ -501,12 +502,10 @@ $metaDescription = 'Casino yayıncılığında lider BERAT K hakkında detaylı 
                     <img src="../assets/images/berat-k-profile.jpg" alt="BERAT K" onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 400\"><rect width=\"400\" height=\"400\" fill=\"%23FFD700\"/><text x=\"200\" y=\"200\" text-anchor=\"middle\" dy=\".3em\" font-size=\"100\" fill=\"%23000\">BK</text></svg>'">
                 </div>
                 <div class="profile-content">
-                    <h1 class="profile-title">BERAT K</h1>
-                    <p class="profile-subtitle">Profesyonel Casino Yayıncısı</p>
+                    <h1 class="profile-title"><?php echo getPageContent('page_title', 'BERAT K'); ?></h1>
+                    <p class="profile-subtitle"><?php echo getPageContent('page_subtitle', 'Profesyonel Casino Yayıncısı'); ?></p>
                     <p class="profile-description">
-                        5 yıldan fazla casino yayıncılığı deneyimi ile binlerce takipçiye ulaşmış, 
-                        alanında uzman bir profesyonel. Canlı casino yayınları, slot oyunları ve 
-                        casino stratejileri konusunda lider isim.
+                        <?php echo getPageContent('bio_content', '5 yıldan fazla casino yayıncılığı deneyimi ile binlerce takipçiye ulaşmış, alanında uzman bir profesyonel. Canlı casino yayınları, slot oyunları ve casino stratejileri konusunda lider isim.'); ?>
                     </p>
                     <div class="achievement-stats">
                         <div class="stat-card" data-aos="fade-up" data-aos-delay="100">

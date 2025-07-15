@@ -145,6 +145,82 @@ foreach ($contents as $content) {
     $pageContents[$content['page_name']][] = $content;
 }
 
+// Add default contents if empty
+if (empty($pageContents)) {
+    $defaultContents = [
+        'home' => [
+            'hero_title' => 'BERAT K',
+            'hero_subtitle' => 'CASINO YAYINCISI',
+            'hero_description' => 'Profesyonel Casino Streaming & Dijital Pazarlama ile başarıya ulaşın!',
+            'services_title' => 'HİZMETLERİM',
+            'services_subtitle' => 'Casino dünyasında profesyonel hizmetler ile başarıya ulaşın',
+            'portfolio_title' => 'PORTFÖYÜM',
+            'portfolio_subtitle' => 'Gerçekleştirdiğim başarılı projeler',
+            'gallery_title' => 'GALERİ',
+            'gallery_subtitle' => 'En iyi anlarım',
+            'contact_title' => 'İLETİŞİM',
+            'contact_subtitle' => 'Benimle iletişime geçin'
+        ],
+        'about' => [
+            'page_title' => 'HAKKIMDA',
+            'page_subtitle' => 'Profesyonel Casino Yayıncısı',
+            'bio_title' => 'Kimim Ben?',
+            'bio_content' => 'Merhaba! Ben BERAT K, profesyonel casino yayıncısı ve dijital pazarlama uzmanıyım.',
+            'experience_title' => 'Deneyim',
+            'experience_content' => '5+ yıllık casino streaming deneyimi',
+            'achievements_title' => 'Başarılar',
+            'achievements_content' => '100K+ takipçi, 2000+ canlı yayın'
+        ],
+        'services' => [
+            'page_title' => 'HİZMETLERİM',
+            'page_subtitle' => 'Profesyonel Casino Streaming Hizmetleri',
+            'service_1_title' => 'Casino Streaming',
+            'service_1_description' => 'Profesyonel casino yayıncılığı hizmetleri',
+            'service_2_title' => 'Dijital Pazarlama',
+            'service_2_description' => 'Sosyal medya ve dijital pazarlama stratejileri',
+            'service_3_title' => 'Danışmanlık',
+            'service_3_description' => 'Casino streaming danışmanlığı'
+        ],
+        'portfolio' => [
+            'page_title' => 'PORTFÖYÜM',
+            'page_subtitle' => 'Gerçekleştirdiğim Başarılı Projeler',
+            'project_info' => 'Her proje, müşterilerimin hedeflerine ulaşması için özenle tasarlanmıştır.'
+        ],
+        'gallery' => [
+            'page_title' => 'GALERİ',
+            'page_subtitle' => 'En İyi Anlarım',
+            'gallery_info' => 'Yayın kariyerimden özel fotoğraflar ve unutulmaz anlar'
+        ],
+        'contact' => [
+            'page_title' => 'İLETİŞİM',
+            'page_subtitle' => 'Benimle İletişime Geçin',
+            'contact_info' => 'Proje teklifleri ve iş birlikleri için benimle iletişime geçebilirsiniz.',
+            'office_hours' => 'Mesai Saatleri: 09:00 - 18:00',
+            'response_time' => 'Ortalama Yanıt Süresi: 2-4 saat'
+        ]
+    ];
+    
+    // Insert default contents
+    foreach ($defaultContents as $pageName => $contents) {
+        foreach ($contents as $key => $value) {
+            $db->insert('page_content', [
+                'content_key' => $key,
+                'content_value' => $value,
+                'page_name' => $pageName,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+    }
+    
+    // Reload contents
+    $contents = $db->findAll('page_content', [], 'page_name ASC, content_key ASC') ?? [];
+    $pageContents = [];
+    foreach ($contents as $content) {
+        $pageContents[$content['page_name']][] = $content;
+    }
+}
+
 $pageTitle = 'İçerik Yönetimi';
 require_once 'includes/admin_header.php';
 ?>

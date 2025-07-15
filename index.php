@@ -2,6 +2,7 @@
 require_once 'includes/config.php';
 require_once 'includes/database.php';
 require_once 'includes/functions.php';
+require_once 'includes/page_functions.php';
 
 $db = new Database();
 
@@ -106,6 +107,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
             text-align: center;
             overflow: hidden;
             background: linear-gradient(135deg, var(--casino-black) 0%, var(--casino-darker) 50%, var(--casino-black) 100%);
+            padding: 100px 0 50px;
         }
         
         .hero-particles {
@@ -405,108 +407,132 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
                 border: 1px solid rgba(255, 215, 0, 0.2);
             }
             
+            .casino-hero {
+                min-height: 100vh;
+                padding: 80px 15px 30px;
+            }
+            
+            .casino-hero-content {
+                max-width: 100%;
+                padding: 0 10px;
+            }
+            
             .text-gradient {
-                font-size: 2rem;
-                line-height: 1.2;
+                font-size: 1.8rem;
+                line-height: 1.1;
+                margin-bottom: 1rem;
             }
             
             .hero-subtitle {
                 font-size: 1rem;
-                margin-bottom: 1.5rem;
+                margin-bottom: 1rem;
             }
             
             .casino-hero-subtitle {
-                font-size: 0.9rem;
-                line-height: 1.4;
-                margin-bottom: 2rem;
+                font-size: 0.85rem;
+                line-height: 1.3;
+                margin-bottom: 1.5rem;
             }
             
             .hero-avatar {
-                width: 120px;
-                height: 120px;
-                margin-bottom: 1.5rem;
+                width: 100px;
+                height: 100px;
+                margin-bottom: 1rem;
             }
             
             .hero-badges {
                 flex-direction: column;
                 align-items: center;
                 gap: 0.5rem;
+                margin: 1rem 0;
             }
             
             .badge-item {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
             }
             
             .casino-stats {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-                margin: 2rem 0;
+                gap: 0.8rem;
+                margin: 1.5rem 0;
             }
             
             .casino-stat {
-                padding: 1rem;
+                padding: 0.8rem;
             }
             
             .casino-stat-number {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
             
             .casino-stat-label {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
             }
             
             .casino-buttons {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.8rem;
                 align-items: center;
+                margin: 1.5rem 0;
             }
             
             .casino-btn {
-                width: 80%;
+                width: 90%;
                 justify-content: center;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
+                padding: 10px 20px;
             }
             
             .social-links {
                 flex-wrap: wrap;
                 gap: 0.5rem;
+                margin-top: 1rem;
             }
             
             .social-link {
-                width: 45px;
-                height: 45px;
-                font-size: 1rem;
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
             }
         }
         
         @media (max-width: 480px) {
+            .casino-hero {
+                padding: 70px 10px 20px;
+            }
+            
             .text-gradient {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             
             .casino-hero-subtitle {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
             
             .casino-stats {
                 grid-template-columns: 1fr;
-                gap: 0.8rem;
+                gap: 0.6rem;
+                margin: 1rem 0;
             }
             
             .casino-stat-number {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             
             .hero-avatar {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
             }
             
             .casino-btn {
-                width: 90%;
+                width: 95%;
                 font-size: 0.8rem;
-                padding: 10px 20px;
+                padding: 8px 16px;
+            }
+            
+            .hero-scroll-indicator {
+                display: none;
             }
         }
         
@@ -1256,13 +1282,12 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
                 </div>
                 
                 <h1 class="casino-hero-title">
-                    <span class="text-gradient">BERAT K</span>
-                    <span class="hero-subtitle">CASINO YAYINCISI</span>
+                    <span class="text-gradient"><?php echo getPageContent('hero_title', 'BERAT K'); ?></span>
+                    <span class="hero-subtitle"><?php echo getPageContent('hero_subtitle', 'CASINO YAYINCISI'); ?></span>
                 </h1>
                 
                 <p class="casino-hero-subtitle">
-                    Profesyonel Casino Streaming & Dijital Pazarlama ile 
-                    <span class="highlight">başarıya ulaşın!</span>
+                    <?php echo getPageContent('hero_description', 'Profesyonel Casino Streaming & Dijital Pazarlama ile başarıya ulaşın!'); ?>
                 </p>
                 
                 <div class="hero-badges" data-aos="fade-up" data-aos-delay="300">
@@ -1340,8 +1365,8 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     <section class="casino-section">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
-                <h2>HİZMETLERİM</h2>
-                <p>Casino dünyasında profesyonel hizmetler ile başarıya ulaşın</p>
+                <h2><?php echo getPageContent('services_title', 'HİZMETLERİM'); ?></h2>
+                <p><?php echo getPageContent('services_subtitle', 'Casino dünyasında profesyonel hizmetler ile başarıya ulaşın'); ?></p>
             </div>
             
             <div class="row">
@@ -1370,8 +1395,8 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     <section class="casino-section" style="background: linear-gradient(135deg, var(--casino-dark) 0%, var(--casino-black) 100%);">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
-                <h2>PORTFÖYÜM</h2>
-                <p>Gerçekleştirdiğim başarılı projeler ve casino deneyimleri</p>
+                <h2><?php echo getPageContent('portfolio_title', 'PORTFÖYÜM'); ?></h2>
+                <p><?php echo getPageContent('portfolio_subtitle', 'Gerçekleştirdiğim başarılı projeler ve casino deneyimleri'); ?></p>
             </div>
             
             <div class="row">
@@ -1410,8 +1435,8 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     <section class="casino-section">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
-                <h2>GALERİ</h2>
-                <p>Canlı yayınlarımdan ve casino deneyimlerimden özel kareler</p>
+                <h2><?php echo getPageContent('gallery_title', 'GALERİ'); ?></h2>
+                <p><?php echo getPageContent('gallery_subtitle', 'Canlı yayınlarımdan ve casino deneyimlerimden özel kareler'); ?></p>
             </div>
             
             <div class="row">
@@ -1447,8 +1472,8 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayınc�
     <section class="casino-section casino-contact-section">
         <div class="container">
             <div class="casino-section-title" data-aos="fade-up">
-                <h2>İLETİŞİM</h2>
-                <p>Benimle iletişime geçin ve birlikte büyük kazançlar elde edelim</p>
+                <h2><?php echo getPageContent('contact_title', 'İLETİŞİM'); ?></h2>
+                <p><?php echo getPageContent('contact_subtitle', 'Benimle iletişime geçin ve birlikte büyük kazançlar elde edelim'); ?></p>
             </div>
             
             <div class="row">

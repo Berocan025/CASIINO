@@ -37,6 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $response = saveService($_POST);
                 break;
                 
+            case 'get_service':
+                $response = getService($_POST['service_id']);
+                break;
+                
             case 'delete_service':
                 $response = deleteService($_POST['service_id']);
                 break;
@@ -139,6 +143,22 @@ function saveService($data) {
     }
     
     return ['success' => (bool)$result, 'message' => $message];
+}
+
+function getService($service_id) {
+    global $db;
+    
+    if (!is_numeric($service_id) || $service_id <= 0) {
+        return ['success' => false, 'message' => 'Geçersiz hizmet ID'];
+    }
+    
+    $service = $db->find('services', ['id' => $service_id]);
+    
+    if (!$service) {
+        return ['success' => false, 'message' => 'Hizmet bulunamadı'];
+    }
+    
+    return ['success' => true, 'data' => $service];
 }
 
 function deleteService($service_id) {

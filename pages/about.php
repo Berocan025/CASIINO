@@ -32,6 +32,84 @@ $metaDescription = 'Casino yayıncılığında lider BERAT K hakkında detaylı 
     <link href="../assets/css/casino-enhanced.css" rel="stylesheet">
     
     <style>
+        /* Mobile Navigation Styles */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--casino-gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .casino-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--casino-gold);
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .casino-nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .casino-nav-link:hover,
+        .casino-nav-link.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--casino-gold);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 2rem 0;
+                transition: right 0.3s ease;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .casino-nav-link {
+                font-size: 1.2rem;
+                padding: 1rem 2rem;
+                width: 90%;
+                text-align: center;
+                margin: 0.5rem 0;
+                border: 1px solid rgba(255, 215, 0, 0.2);
+            }
+        }
+        
         /* ABOUT PAGE SPECIAL EFFECTS */
         .about-hero {
             min-height: 100vh;
@@ -392,18 +470,25 @@ $metaDescription = 'Casino yayıncılığında lider BERAT K hakkında detaylı 
     <div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
 
     <!-- Navigation -->
-    <nav class="casino-navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);">
+    <nav class="casino-navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="../index.php" class="casino-brand">BERAT K</a>
-                <div class="d-flex gap-4">
-                    <a href="../index.php" class="casino-nav-item">Ana Sayfa</a>
-                    <a href="about.php" class="casino-nav-item active">Hakkımda</a>
-                    <a href="services.php" class="casino-nav-item">Hizmetler</a>
-                    <a href="portfolio.php" class="casino-nav-item">Portfolyo</a>
-                    <a href="gallery.php" class="casino-nav-item">Galeri</a>
-                    <a href="contact.php" class="casino-nav-item">İletişim</a>
-                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-nav-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.php" class="casino-nav-link">Ana Sayfa</a></li>
+                    <li><a href="about.php" class="casino-nav-link active">Hakkımda</a></li>
+                    <li><a href="services.php" class="casino-nav-link">Hizmetler</a></li>
+                    <li><a href="portfolio.php" class="casino-nav-link">Portfolyo</a></li>
+                    <li><a href="gallery.php" class="casino-nav-link">Galeri</a></li>
+                    <li><a href="contact.php" class="casino-nav-link">İletişim</a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -636,6 +721,45 @@ $metaDescription = 'Casino yayıncılığında lider BERAT K hakkında detaylı 
             }
         });
 
+        // Mobile Navigation Toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            const toggleBtn = document.querySelector('.mobile-nav-toggle i');
+            
+            navMenu.classList.toggle('active');
+            
+            // Toggle hamburger/close icon
+            if (navMenu.classList.contains('active')) {
+                toggleBtn.classList.remove('fa-bars');
+                toggleBtn.classList.add('fa-times');
+            } else {
+                toggleBtn.classList.remove('fa-times');
+                toggleBtn.classList.add('fa-bars');
+            }
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const toggleBtn = document.querySelector('.mobile-nav-toggle');
+            
+            if (!navMenu.contains(event.target) && !toggleBtn.contains(event.target)) {
+                navMenu.classList.remove('active');
+                document.querySelector('.mobile-nav-toggle i').classList.remove('fa-times');
+                document.querySelector('.mobile-nav-toggle i').classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.casino-nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navMenu = document.getElementById('navMenu');
+                navMenu.classList.remove('active');
+                document.querySelector('.mobile-nav-toggle i').classList.remove('fa-times');
+                document.querySelector('.mobile-nav-toggle i').classList.add('fa-bars');
+            });
+        });
+        
         // Back to top
         document.querySelector('.back-to-top').addEventListener('click', function(e) {
             e.preventDefault();

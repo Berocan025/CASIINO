@@ -63,8 +63,9 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
     
     <style>
         :root {
-            --casino-black: #0a0a0a;
-            --casino-dark: #1a1a1a;
+            --casino-black: #000000;
+            --casino-dark: #0a0a0a;
+            --casino-darker: #050505;
             --casino-gold: #FFD700;
             --casino-red: #DC143C;
             --casino-green: #228B22;
@@ -75,9 +76,10 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             --neon-lime: #32CD32;
             --text-light: #FFFFFF;
             --text-gold: #FFD700;
-            --text-silver: #C0C0C0;
+            --text-silver: #E0E0E0;
+            --text-muted: #CCCCCC;
             --shadow-neon: 0 0 20px;
-            --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.8);
+            --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.9);
         }
         
         * {
@@ -103,6 +105,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             justify-content: center;
             text-align: center;
             overflow: hidden;
+            background: linear-gradient(135deg, var(--casino-black) 0%, var(--casino-darker) 50%, var(--casino-black) 100%);
         }
         
         .hero-particles {
@@ -153,25 +156,35 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 4rem;
-            font-weight: 900;
+            font-size: 3rem;
+            font-weight: 800;
             display: block;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
+            line-height: 1.1;
         }
         
         .hero-subtitle {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--text-silver);
             font-weight: 500;
             letter-spacing: 1px;
             margin-bottom: 1rem;
+            line-height: 1.3;
         }
         
         .highlight {
             color: var(--casino-gold);
             font-weight: 600;
+        }
+        
+        .casino-hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-silver);
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 1.5rem;
         }
         
         .hero-badges {
@@ -307,24 +320,193 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             60% { transform: translateX(-50%) translateY(-5px); }
         }
         
+        /* Navigation Improvements */
+        .casino-navbar {
+            background: rgba(10, 10, 10, 0.95) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .casino-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--casino-gold);
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .casino-nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .casino-nav-link:hover,
+        .casino-nav-link.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--casino-gold);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--casino-gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .mobile-nav-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 2rem 0;
+                transition: right 0.3s ease;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .casino-nav-link {
+                font-size: 1.2rem;
+                padding: 1rem 2rem;
+                width: 90%;
+                text-align: center;
+                margin: 0.5rem 0;
+                border: 1px solid rgba(255, 215, 0, 0.2);
+            }
+            
             .text-gradient {
-                font-size: 2.5rem;
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .casino-hero-subtitle {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-avatar {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 1.5rem;
             }
             
             .hero-badges {
                 flex-direction: column;
                 align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .badge-item {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
             }
             
             .casino-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
+                margin: 2rem 0;
+            }
+            
+            .casino-stat {
+                padding: 1rem;
             }
             
             .casino-stat-number {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .casino-stat-label {
+                font-size: 0.8rem;
+            }
+            
+            .casino-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .casino-btn {
+                width: 80%;
+                justify-content: center;
+                font-size: 0.9rem;
+            }
+            
+            .social-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .social-link {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .text-gradient {
+                font-size: 1.5rem;
+            }
+            
+            .casino-hero-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .casino-stats {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .casino-stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .hero-avatar {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .casino-btn {
+                width: 90%;
+                font-size: 0.8rem;
+                padding: 10px 20px;
             }
         }
         
@@ -336,6 +518,64 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             top: 0;
             left: 0;
             z-index: -1;
+        }
+        
+        /* Casino Sections Dark Theme */
+        .casino-section {
+            background: var(--casino-dark);
+            color: var(--text-light);
+            padding: 4rem 0;
+            position: relative;
+        }
+        
+        .casino-section-title h2 {
+            color: var(--text-light);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .casino-section-title p {
+            color: var(--text-silver);
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .casino-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: var(--text-light);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .casino-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.3);
+        }
+        
+        .casino-card h3 {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .casino-card p {
+            color: var(--text-silver);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .casino-card-icon {
+            font-size: 3rem;
+            color: var(--casino-gold);
+            margin-bottom: 1rem;
+            text-align: center;
         }
         
         /* Casino Navigation */
@@ -984,20 +1224,23 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
     <!-- Casino Navigation -->
     <nav class="casino-navbar">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <a href="index.php" class="casino-brand">BERAT K</a>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-end">
-                        <a href="index.php" class="casino-nav-link active">Ana Sayfa</a>
-                        <a href="pages/about.php" class="casino-nav-link">HakkÄ±mda</a>
-                        <a href="pages/services.php" class="casino-nav-link">Hizmetler</a>
-                        <a href="pages/portfolio.php" class="casino-nav-link">Portfolyo</a>
-                        <a href="pages/gallery.php" class="casino-nav-link">Galeri</a>
-                        <a href="pages/contact.php" class="casino-nav-link">Ä°letiÅŸim</a>
-                    </div>
-                </div>
+            <div class="d-flex justify-content-between align-items-center py-2">
+                <a href="index.php" class="casino-brand">BERAT K</a>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-nav-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.php" class="casino-nav-link active">Ana Sayfa</a></li>
+                    <li><a href="pages/about.php" class="casino-nav-link">HakkÄ±mda</a></li>
+                    <li><a href="pages/services.php" class="casino-nav-link">Hizmetler</a></li>
+                    <li><a href="pages/portfolio.php" class="casino-nav-link">Portfolyo</a></li>
+                    <li><a href="pages/gallery.php" class="casino-nav-link">Galeri</a></li>
+                    <li><a href="pages/contact.php" class="casino-nav-link">Ä°letiÅŸim</a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -1493,6 +1736,45 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
         
         // Initialize hero particles
         createHeroParticles();
+        
+        // Mobile Navigation Toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            const toggleBtn = document.querySelector('.mobile-nav-toggle i');
+            
+            navMenu.classList.toggle('active');
+            
+            // Toggle hamburger/close icon
+            if (navMenu.classList.contains('active')) {
+                toggleBtn.classList.remove('fa-bars');
+                toggleBtn.classList.add('fa-times');
+            } else {
+                toggleBtn.classList.remove('fa-times');
+                toggleBtn.classList.add('fa-bars');
+            }
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const toggleBtn = document.querySelector('.mobile-nav-toggle');
+            
+            if (!navMenu.contains(event.target) && !toggleBtn.contains(event.target)) {
+                navMenu.classList.remove('active');
+                document.querySelector('.mobile-nav-toggle i').classList.remove('fa-times');
+                document.querySelector('.mobile-nav-toggle i').classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.casino-nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navMenu = document.getElementById('navMenu');
+                navMenu.classList.remove('active');
+                document.querySelector('.mobile-nav-toggle i').classList.remove('fa-times');
+                document.querySelector('.mobile-nav-toggle i').classList.add('fa-bars');
+            });
+        });
         
         // Counter animation (legacy support)
         function animateCounters() {

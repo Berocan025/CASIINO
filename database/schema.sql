@@ -156,6 +156,18 @@ CREATE TABLE IF NOT EXISTS statistics (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Page content management table
+CREATE TABLE IF NOT EXISTS page_content (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content_key VARCHAR(255) NOT NULL UNIQUE,
+    content_value TEXT NOT NULL,
+    page_name VARCHAR(100) NOT NULL,
+    content_type VARCHAR(50) DEFAULT 'text', -- text, html, image, json
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_pages_slug ON pages(slug);
 CREATE INDEX IF NOT EXISTS idx_services_slug ON services(slug);
@@ -165,3 +177,5 @@ CREATE INDEX IF NOT EXISTS idx_messages_status ON messages(status);
 CREATE INDEX IF NOT EXISTS idx_settings_key ON settings(setting_key);
 CREATE INDEX IF NOT EXISTS idx_menu_parent ON menu_items(parent_id);
 CREATE INDEX IF NOT EXISTS idx_slider_sort ON slider(sort_order);
+CREATE INDEX IF NOT EXISTS idx_page_content_key ON page_content(content_key);
+CREATE INDEX IF NOT EXISTS idx_page_content_page ON page_content(page_name);

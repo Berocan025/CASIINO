@@ -420,6 +420,13 @@ $admin_email = $_SESSION['admin_email'] ?? '';
             </div>
             
             <div class="nav-item">
+                <a href="content.php" class="nav-link <?= $current_page === 'content' ? 'active' : '' ?>">
+                    <i class="fas fa-file-text nav-icon"></i>
+                    <span class="nav-text">İçerik Yönetimi</span>
+                </a>
+            </div>
+            
+            <div class="nav-item">
                 <a href="services.php" class="nav-link <?= $current_page === 'services' ? 'active' : '' ?>">
                     <i class="fas fa-cogs nav-icon"></i>
                     <span class="nav-text">Hizmetler</span>

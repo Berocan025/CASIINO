@@ -53,7 +53,7 @@ function renderMobileNavigation($currentPage = '') {
         'pages/contact.php' => 'İletişim'
     ];
     
-    $output = '<nav class="casino-navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 215, 0, 0.2);">';
+    $output = '<nav class="casino-navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; background: rgba(0,0,0,0.95) !important; backdrop-filter: blur(15px); border-bottom: 2px solid var(--casino-gold); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);">';
     $output .= '<div class="container">';
     $output .= '<div class="d-flex justify-content-between align-items-center">';
     $output .= '<a href="../index.php" class="casino-brand">BERAT K</a>';
@@ -90,12 +90,14 @@ function renderMobileNavigationCSS() {
         /* Mobile Navigation Styles */
         .mobile-nav-toggle {
             display: none;
-            background: none;
+            background: rgba(0, 0, 0, 0.8) !important;
             border: none;
-            color: var(--casino-gold);
+            color: var(--casino-gold) !important;
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
         
         .nav-menu {
@@ -115,7 +117,7 @@ function renderMobileNavigationCSS() {
         }
         
         .casino-nav-link {
-            color: var(--text-light);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             padding: 0.5rem 1rem;
             border-radius: 25px;
@@ -126,21 +128,21 @@ function renderMobileNavigationCSS() {
         
         .casino-nav-link:hover,
         .casino-nav-link.active {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.2);
             color: var(--casino-gold);
         }
         
         @media (max-width: 768px) {
             .mobile-nav-toggle {
-                display: block;
+                display: block !important;
             }
             
             .nav-menu {
                 position: fixed;
-                top: 70px;
+                top: 80px;
                 right: -100%;
                 width: 100%;
-                height: calc(100vh - 70px);
+                height: calc(100vh - 80px);
                 background: rgba(0, 0, 0, 0.98);
                 flex-direction: column;
                 justify-content: flex-start;
@@ -148,7 +150,8 @@ function renderMobileNavigationCSS() {
                 padding: 2rem 0;
                 transition: right 0.3s ease;
                 z-index: 1000;
-                backdrop-filter: blur(10px);
+                backdrop-filter: blur(15px);
+                border-left: 2px solid var(--casino-gold);
             }
             
             .nav-menu.active {
@@ -156,12 +159,23 @@ function renderMobileNavigationCSS() {
             }
             
             .casino-nav-link {
-                font-size: 1.2rem;
-                padding: 1rem 2rem;
+                font-size: 1.3rem;
+                padding: 1.2rem 2rem;
                 width: 90%;
                 text-align: center;
-                margin: 0.5rem 0;
-                border: 1px solid rgba(255, 215, 0, 0.2);
+                margin: 0.8rem 0;
+                border: 2px solid rgba(255, 215, 0, 0.3);
+                border-radius: 25px;
+                background: rgba(255, 215, 0, 0.05);
+                transition: all 0.3s ease;
+            }
+            
+            .casino-nav-link:hover,
+            .casino-nav-link.active {
+                background: var(--casino-gold);
+                color: var(--casino-black);
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             }
         }
     </style>';

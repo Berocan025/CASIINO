@@ -432,12 +432,14 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             
             .casino-hero {
                 min-height: 100vh;
-                padding: 80px 15px 30px;
+                padding: 120px 15px 50px !important;
+                margin-top: 0 !important;
             }
             
             .casino-hero-content {
                 max-width: 100%;
-                padding: 0 10px;
+                padding: 20px 10px;
+                margin-top: 0 !important;
             }
             
             .text-gradient {
@@ -629,7 +631,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
         
         /* Casino Navigation */
         .casino-navbar {
-            background: linear-gradient(135deg, var(--casino-black) 0%, var(--casino-dark) 100%);
+            background: rgba(0, 0, 0, 0.95) !important;
             backdrop-filter: blur(15px);
             border-bottom: 2px solid var(--casino-gold);
             padding: 1rem 0;
@@ -637,7 +639,7 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: var(--shadow-heavy);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
         }
         
         .casino-navbar::before {

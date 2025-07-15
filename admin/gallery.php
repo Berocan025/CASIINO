@@ -269,8 +269,25 @@ function getGallery($gallery_id) {
     
     return ['success' => true, 'data' => $gallery];
 }
+
 <?php include 'includes/admin_header.php'; ?>
         <style>
+        /* Dashboard Style for Gallery */
+        .dashboard-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -279,15 +296,27 @@ function getGallery($gallery_id) {
         
         .gallery-item {
             background: var(--card-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
         }
         
         .gallery-item:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
         
         .gallery-image {
@@ -353,24 +382,17 @@ function getGallery($gallery_id) {
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: var(--card-bg);
         }
         
         .upload-area:hover {
             border-color: var(--secondary-color);
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .upload-area.dragover {
-            border-color: var(--secondary-color);
             background: rgba(111, 66, 193, 0.1);
         }
         
-        .sortable-ghost {
-            opacity: 0.4;
-        }
-        
-        .sortable-chosen {
-            transform: scale(1.05);
+        .upload-area.dragover {
+            border-color: var(--accent-color);
+            background: rgba(233, 30, 99, 0.1);
         }
         
         .drag-handle {
@@ -379,11 +401,12 @@ function getGallery($gallery_id) {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: var(--card-bg);
-            padding: 5px;
-            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px;
+            border-radius: 8px;
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 10;
         }
         
         .gallery-item:hover .drag-handle {
@@ -392,6 +415,62 @@ function getGallery($gallery_id) {
         
         .drag-handle:hover {
             color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .page-header-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--danger-color);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gallery-grid-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
         }
     </style>
 
@@ -422,50 +501,57 @@ function getGallery($gallery_id) {
 
         <div class="content-wrapper">
             <div class="container-fluid p-4">
-                <!-- Page Actions -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-3">
-                            <i class="fas fa-images fa-2x text-primary"></i>
-                            <div>
-                                <h2 class="mb-0 text-white">Galeri Yönetimi</h2>
-                                <p class="mb-0 text-muted">Galeri görsellerinizi yönetin ve düzenleyin</p>
+                <!-- Page Header Card -->
+                <div class="page-header-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon">
+                                    <i class="fas fa-images"></i>
+                                </div>
+                                <div>
+                                    <h2 class="mb-0 text-white">Galeri Yönetimi</h2>
+                                    <p class="mb-0" style="color: var(--text-light);">Galeri görsellerinizi yönetin ve düzenleyin</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <button class="btn btn-primary btn-lg" onclick="showGalleryModal()">
-                            <i class="fas fa-plus me-2"></i>
-                            Yeni Görsel Ekle
-                        </button>
+                        <div class="col-md-6 text-end">
+                            <button class="btn btn-primary btn-lg" onclick="showGalleryModal()">
+                                <i class="fas fa-plus me-2"></i>
+                                Yeni Görsel Ekle
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <!-- Search and Filter -->
-                <div class="row mb-4">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-body p-3">
+
+                <!-- Search and Filter Card -->
+                <div class="dashboard-card">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="dashboard-card">
                                 <div class="input-group">
                                     <span class="input-group-text bg-transparent border-0">
-                                        <i class="fas fa-search text-muted"></i>
+                                        <i class="fas fa-search" style="color: var(--text-light);"></i>
                                     </span>
-                                    <input type="text" class="form-control border-0" placeholder="Görsel ara..." 
+                                    <input type="text" class="form-control border-0 bg-transparent" 
+                                           style="color: white;" placeholder="Görsel ara..." 
                                            id="searchInput" value="<?php echo htmlspecialchars($searchTerm); ?>">
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-select" id="statusFilter">
-                            <option value="">Tüm Durumlar</option>
-                            <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Aktif</option>
-                            <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Pasif</option>
-                        </select>
+                        <div class="col-md-4">
+                            <select class="form-select bg-transparent border-0" style="color: white;" id="statusFilter">
+                                <option value="">Tüm Durumlar</option>
+                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Aktif</option>
+                                <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Pasif</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                     
                     <!-- Gallery Grid -->
-                    <div class="gallery-grid" id="galleryGrid">
+                    <div class="gallery-grid-container">
+                        <div class="gallery-grid" id="galleryGrid">
                         <?php if (empty($gallery)): ?>
                             <div class="col-12 text-center py-5">
                                 <i class="fas fa-images fa-3x text-muted mb-3"></i>
@@ -526,6 +612,7 @@ function getGallery($gallery_id) {
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
+                        </div>
                     </div>
                     
                     <!-- Pagination -->

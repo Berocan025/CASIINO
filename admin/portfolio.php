@@ -97,6 +97,8 @@ $portfolio = $db->query(
 
 $pageTitle = "Portföy Yönetimi";
 
+include 'includes/admin_header.php';
+
 // Portfolio functions
 function savePortfolio($data, $files) {
     global $db;
@@ -271,45 +273,181 @@ function getPortfolio($portfolio_id) {
     return ['success' => true, 'data' => $portfolio];
 }
 ?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?> - Casino Yayıncısı BERAT K</title>
-    <meta name="robots" content="noindex, nofollow">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- SweetAlert2 -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    
-    <style>
-        .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            border-radius: 10px;
-            margin: 5px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            transform: translateX(5px);
-        }
-        
-        .main-content {
-            background: #f8f9fa;
-            min-height: 100vh;
-        }
+
+<style>
+/* Dashboard Style for Portfolio */
+.dashboard-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.portfolio-item {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.portfolio-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+}
+
+.portfolio-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.page-header-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+}
+
+.stat-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.status-active {
+    background: rgba(40, 167, 69, 0.2);
+    color: var(--success-color);
+}
+
+.status-inactive {
+    background: rgba(220, 53, 69, 0.2);
+    color: var(--danger-color);
+}
+</style>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="topnav">
+        <div class="topnav-left">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="page-title"><?php echo $pageTitle; ?></h1>
+        </div>
+        <div class="topnav-right">
+            <div class="admin-dropdown">
+                <a href="#" class="admin-profile" onclick="toggleDropdown()">
+                    <div class="admin-avatar">
+                        <?php echo strtoupper(substr($admin_username ?? 'A', 0, 1)); ?>
+                    </div>
+                    <div class="admin-info">
+                        <div class="admin-name"><?php echo htmlspecialchars($admin_username ?? 'Admin'); ?></div>
+                        <div class="admin-role">Admin</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="container-fluid p-4">
+            <!-- Page Header Card -->
+            <div class="page-header-card">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-0 text-white">Portföy Yönetimi</h2>
+                                <p class="mb-0" style="color: var(--text-light);">Portföy projelerinizi yönetin ve düzenleyin</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-primary btn-lg" onclick="showPortfolioModal()">
+                            <i class="fas fa-plus me-2"></i>
+                            Yeni Proje Ekle
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter Card -->
+            <div class="dashboard-card">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="dashboard-card">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-0">
+                                    <i class="fas fa-search" style="color: var(--text-light);"></i>
+                                </span>
+                                <input type="text" class="form-control border-0 bg-transparent" 
+                                       style="color: white;" placeholder="Proje ara..." 
+                                       id="searchInput" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select bg-transparent border-0" style="color: white;" id="statusFilter">
+                            <option value="">Tüm Durumlar</option>
+                            <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Aktif</option>
+                            <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Pasif</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="dashboard-card">
+                <div class="portfolio-grid" id="portfolioGrid">
         
         .card {
             border: none;
@@ -1149,5 +1287,5 @@ function getPortfolio($portfolio_id) {
             };
         }
     </script>
-</body>
-</html>
+
+<?php include 'includes/admin_footer.php'; ?>

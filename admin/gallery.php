@@ -199,8 +199,8 @@ function deleteGallery($gallery_id) {
     
     // Get gallery data to delete image
     $gallery = $db->find('gallery', ['id' => $gallery_id]);
-    if ($gallery && $gallery['image']) {
-        $imagePath = '../uploads/gallery/' . $gallery['image'];
+    if ($gallery && $gallery['file_path']) {
+        $imagePath = '../uploads/gallery/' . $gallery['file_path'];
         if (file_exists($imagePath)) {
             unlink($imagePath);
         }
@@ -269,112 +269,8 @@ function getGallery($gallery_id) {
     
     return ['success' => true, 'data' => $gallery];
 }
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?> - Casino Yayıncısı BERAT K</title>
-    <meta name="robots" content="noindex, nofollow">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- SweetAlert2 -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    
-    <style>
-        .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            border-radius: 10px;
-            margin: 5px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            transform: translateX(5px);
-        }
-        
-        .main-content {
-            background: #f8f9fa;
-            min-height: 100vh;
-        }
-        
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 25px;
-            padding: 10px 25px;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #764ba2, #667eea);
-            transform: translateY(-2px);
-        }
-        
-        .status-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .status-inactive {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-radius: 0 0 20px 20px;
-        }
-        
-        .search-box {
-            background: white;
-            border-radius: 25px;
-            padding: 10px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .search-box input {
-            border: none;
-            outline: none;
-            background: transparent;
-        }
-        
-        .search-box input:focus {
-            box-shadow: none;
-        }
-        
+<?php include 'includes/admin_header.php'; ?>
+        <style>
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -382,10 +278,10 @@ function getGallery($gallery_id) {
         }
         
         .gallery-item {
-            background: white;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             transition: transform 0.3s ease;
             position: relative;
         }
@@ -398,7 +294,7 @@ function getGallery($gallery_id) {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            background: #f8f9fa;
+            background: var(--dark-bg);
         }
         
         .gallery-content {
@@ -409,11 +305,11 @@ function getGallery($gallery_id) {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #333;
+            color: white;
         }
         
         .gallery-description {
-            color: #666;
+            color: var(--text-light);
             font-size: 0.9rem;
             margin-bottom: 10px;
             display: -webkit-box;
@@ -428,34 +324,12 @@ function getGallery($gallery_id) {
             align-items: center;
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border-color);
         }
         
         .gallery-actions {
             display: flex;
             gap: 5px;
-        }
-        
-        .modal-content {
-            border-radius: 20px;
-            border: none;
-        }
-        
-        .modal-header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 12px 15px;
-        }
-        
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
         
         .image-preview {
@@ -464,7 +338,7 @@ function getGallery($gallery_id) {
             height: 200px;
             object-fit: cover;
             border-radius: 10px;
-            border: 2px dashed #dee2e6;
+            border: 2px dashed var(--border-color);
             display: none;
         }
         
@@ -473,7 +347,7 @@ function getGallery($gallery_id) {
         }
         
         .upload-area {
-            border: 2px dashed #dee2e6;
+            border: 2px dashed var(--border-color);
             border-radius: 10px;
             padding: 30px;
             text-align: center;
@@ -482,13 +356,13 @@ function getGallery($gallery_id) {
         }
         
         .upload-area:hover {
-            border-color: #667eea;
-            background: #f8f9fa;
+            border-color: var(--secondary-color);
+            background: rgba(255, 255, 255, 0.05);
         }
         
         .upload-area.dragover {
-            border-color: #667eea;
-            background: #e3f2fd;
+            border-color: var(--secondary-color);
+            background: rgba(111, 66, 193, 0.1);
         }
         
         .sortable-ghost {
@@ -501,11 +375,11 @@ function getGallery($gallery_id) {
         
         .drag-handle {
             cursor: move;
-            color: #6c757d;
+            color: var(--text-light);
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255,255,255,0.9);
+            background: var(--card-bg);
             padding: 5px;
             border-radius: 5px;
             opacity: 0;
@@ -517,140 +391,78 @@ function getGallery($gallery_id) {
         }
         
         .drag-handle:hover {
-            color: #495057;
-        }
-        
-        .image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .gallery-item:hover .image-overlay {
-            opacity: 1;
-        }
-        
-        .overlay-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .overlay-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        
-        .overlay-btn:hover {
-            background: white;
-            color: #333;
+            color: var(--accent-color);
         }
     </style>
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-0">
-                <div class="p-4">
-                    <h4 class="text-white mb-4">
-                        <i class="fas fa-dice me-2"></i>
-                        Casino Admin
-                    </h4>
-                    <nav class="nav flex-column">
-                        <a class="nav-link" href="dashboard.php">
-                            <i class="fas fa-tachometer-alt me-2"></i>
-                            Dashboard
-                        </a>
-                        <a class="nav-link" href="pages.php">
-                            <i class="fas fa-file-alt me-2"></i>
-                            Sayfalar
-                        </a>
-                        <a class="nav-link" href="services.php">
-                            <i class="fas fa-cogs me-2"></i>
-                            Hizmetler
-                        </a>
-                        <a class="nav-link" href="portfolio.php">
-                            <i class="fas fa-briefcase me-2"></i>
-                            Portföy
-                        </a>
-                        <a class="nav-link active" href="gallery.php">
-                            <i class="fas fa-images me-2"></i>
-                            Galeri
-                        </a>
-                        <a class="nav-link" href="messages.php">
-                            <i class="fas fa-envelope me-2"></i>
-                            Mesajlar
-                        </a>
-                        <a class="nav-link" href="settings.php">
-                            <i class="fas fa-cog me-2"></i>
-                            Ayarlar
-                        </a>
-                        <hr class="my-3" style="border-color: rgba(255,255,255,0.3);">
-                        <a class="nav-link" href="logout.php">
-                            <i class="fas fa-sign-out-alt me-2"></i>
-                            Çıkış Yap
-                        </a>
-                    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="topnav">
+            <div class="topnav-left">
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title"><?php echo $pageTitle; ?></h1>
+            </div>
+            <div class="topnav-right">
+                <div class="admin-dropdown">
+                    <a href="#" class="admin-profile" onclick="toggleDropdown()">
+                        <div class="admin-avatar">
+                            <?php echo strtoupper(substr($admin_username, 0, 1)); ?>
+                        </div>
+                        <div class="admin-info">
+                            <div class="admin-name"><?php echo htmlspecialchars($admin_username); ?></div>
+                            <div class="admin-role">Admin</div>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
                 </div>
             </div>
-            
-            <!-- Main Content -->
-            <div class="col-md-10 main-content p-0">
-                <!-- Page Header -->
-                <div class="page-header">
-                    <div class="container-fluid">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <h1 class="mb-0">
-                                    <i class="fas fa-images me-3"></i>
-                                    <?php echo $pageTitle; ?>
-                                </h1>
-                                <p class="mb-0 opacity-75">Galeri görsellerinizi yönetin ve düzenleyin</p>
-                            </div>
-                            <div class="col-md-6 text-end">
-                                <button class="btn btn-light btn-lg" onclick="showGalleryModal()">
-                                    <i class="fas fa-plus me-2"></i>
-                                    Yeni Görsel Ekle
-                                </button>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="container-fluid p-4">
+                <!-- Page Actions -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fas fa-images fa-2x text-primary"></i>
+                            <div>
+                                <h2 class="mb-0 text-white">Galeri Yönetimi</h2>
+                                <p class="mb-0 text-muted">Galeri görsellerinizi yönetin ve düzenleyin</p>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-primary btn-lg" onclick="showGalleryModal()">
+                            <i class="fas fa-plus me-2"></i>
+                            Yeni Görsel Ekle
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="container-fluid">
-                    <!-- Search and Filter -->
-                    <div class="row mb-4">
-                        <div class="col-md-8">
-                            <div class="search-box">
+                <!-- Search and Filter -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body p-3">
                                 <div class="input-group">
                                     <span class="input-group-text bg-transparent border-0">
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
-                                    <input type="text" class="form-control" placeholder="Görsel ara..." 
+                                    <input type="text" class="form-control border-0" placeholder="Görsel ara..." 
                                            id="searchInput" value="<?php echo htmlspecialchars($searchTerm); ?>">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <select class="form-select" id="statusFilter" style="border-radius: 25px;">
-                                <option value="">Tüm Durumlar</option>
-                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Aktif</option>
-                                <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Pasif</option>
-                            </select>
-                        </div>
                     </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Tüm Durumlar</option>
+                            <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Aktif</option>
+                            <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Pasif</option>
+                        </select>
+                    </div>
+                </div>
                     
                     <!-- Gallery Grid -->
                     <div class="gallery-grid" id="galleryGrid">
@@ -1150,5 +962,5 @@ function getGallery($gallery_id) {
             };
         }
     </script>
-</body>
-</html>
+
+<?php include 'includes/admin_footer.php'; ?>

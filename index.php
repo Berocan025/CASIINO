@@ -362,6 +362,13 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
+            z-index: 1001;
+            position: relative;
+        }
+        
+        .mobile-nav-toggle:hover {
+            color: white;
+            transform: scale(1.1);
         }
         
         .nav-menu {
@@ -375,23 +382,28 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .mobile-nav-toggle {
-                display: block;
+                display: block !important;
+                color: var(--casino-gold) !important;
+                background: rgba(0, 0, 0, 0.8) !important;
+                border-radius: 8px !important;
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.3) !important;
             }
             
             .nav-menu {
                 position: fixed;
-                top: 70px;
+                top: 80px;
                 right: -100%;
                 width: 100%;
-                height: calc(100vh - 70px);
-                background: rgba(10, 10, 10, 0.98);
+                height: calc(100vh - 80px);
+                background: rgba(0, 0, 0, 0.98);
                 flex-direction: column;
                 justify-content: flex-start;
                 align-items: center;
                 padding: 2rem 0;
                 transition: right 0.3s ease;
                 z-index: 1000;
-                backdrop-filter: blur(10px);
+                backdrop-filter: blur(15px);
+                border-left: 2px solid var(--casino-gold);
             }
             
             .nav-menu.active {
@@ -399,12 +411,23 @@ $metaDescription = $settings['site_description'] ?? 'Profesyonel casino yayÄ±ncÄ
             }
             
             .casino-nav-link {
-                font-size: 1.2rem;
-                padding: 1rem 2rem;
+                font-size: 1.3rem;
+                padding: 1.2rem 2rem;
                 width: 90%;
                 text-align: center;
-                margin: 0.5rem 0;
-                border: 1px solid rgba(255, 215, 0, 0.2);
+                margin: 0.8rem 0;
+                border: 2px solid rgba(255, 215, 0, 0.3);
+                border-radius: 25px;
+                background: rgba(255, 215, 0, 0.05);
+                transition: all 0.3s ease;
+            }
+            
+            .casino-nav-link:hover,
+            .casino-nav-link.active {
+                background: var(--casino-gold);
+                color: var(--casino-black);
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             }
             
             .casino-hero {

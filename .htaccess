@@ -4,10 +4,10 @@
 # Enable URL Rewriting
 RewriteEngine On
 
-# Security Headers
+# Security Headers (Only if mod_headers is available)
 <IfModule mod_headers.c>
-    # HSTS
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    # HSTS (only for HTTPS)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
     
     # XSS Protection
     Header always set X-XSS-Protection "1; mode=block"
@@ -16,16 +16,13 @@ RewriteEngine On
     Header always set X-Content-Type-Options nosniff
     
     # Frame Options
-    Header always set X-Frame-Options DENY
+    Header always set X-Frame-Options SAMEORIGIN
     
     # Referrer Policy
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    
-    # Content Security Policy
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
 </IfModule>
 
-# Compression
+# Compression (Optional - only if mod_deflate is available)
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
@@ -38,7 +35,7 @@ RewriteEngine On
     AddOutputFilterByType DEFLATE application/x-javascript
 </IfModule>
 
-# Browser Caching
+# Browser Caching (Optional - only if mod_expires is available)
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresByType text/css "access plus 1 month"
@@ -75,24 +72,20 @@ RewriteEngine On
     Options -Indexes
 </IfModule>
 
-# Protect database directory
-<Directory "database/">
-    Require all denied
-</Directory>
-
-# Protect includes directory
-<Directory "includes/">
-    Require all denied
-</Directory>
-
-# Protect backups directory
-<Directory "backups/">
-    Require all denied
-</Directory>
-
-# Force HTTPS (if SSL is available)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Protect database directory (if mod_authz_core is available)
+<IfModule mod_authz_core.c>
+    <Directory "database/">
+        Require all denied
+    </Directory>
+    
+    <Directory "includes/">
+        Require all denied
+    </Directory>
+    
+    <Directory "backups/">
+        Require all denied
+    </Directory>
+</IfModule>
 
 # Pretty URLs
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -102,10 +95,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^$ index.php [L]
 
 # Pages
-RewriteRule ^about/?$ about.php [L]
-RewriteRule ^services/?$ services.php [L]
-RewriteRule ^portfolio/?$ portfolio.php [L]
-RewriteRule ^contact/?$ contact.php [L]
+RewriteRule ^about/?$ pages/about.php [L]
+RewriteRule ^services/?$ pages/services.php [L]
+RewriteRule ^portfolio/?$ pages/portfolio.php [L]
+RewriteRule ^gallery/?$ pages/gallery.php [L]
+RewriteRule ^contact/?$ pages/contact.php [L]
 
 # Newsletter pages
 RewriteRule ^newsletter-confirm/?$ newsletter-confirm.php [L,QSA]
@@ -117,26 +111,25 @@ RewriteRule ^admin/([^/]+)/?$ admin/$1.php [L]
 
 # Error pages
 ErrorDocument 404 /404.php
-ErrorDocument 403 /403.php
-ErrorDocument 500 /500.php
+ErrorDocument 403 /404.php
+ErrorDocument 500 /404.php
 
-# Rate limiting (if mod_evasive is available)
-# <IfModule mod_evasive24.c>
-#     DOSHashTableSize    512
-#     DOSPageCount        3
-#     DOSPageInterval     1
-#     DOSSiteCount        50
-#     DOSSiteInterval     1
-#     DOSBlockingPeriod   600
-# </IfModule>
+# Prevent hotlinking (commented out to avoid issues)
+# RewriteCond %{HTTP_REFERER} !^$
+# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yoursite\.com [NC]
+# RewriteCond %{REQUEST_URI} \.(gif|jpg|jpeg|png|bmp|mp3|mp4|avi|wav)$ [NC]
+# RewriteRule . - [F]
 
-# Prevent hotlinking
-RewriteCond %{HTTP_REFERER} !^$
-RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yoursite\.com [NC]
-RewriteCond %{REQUEST_URI} \.(gif|jpg|jpeg|png|bmp|mp3|mp4|avi|wav)$ [NC]
-RewriteRule . - [F]
+# PHP Settings (only if mod_php is available)
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_vars 3000
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
 
-# PHP Settings
 <IfModule mod_php7.c>
     php_value upload_max_filesize 10M
     php_value post_max_size 10M
@@ -144,5 +137,13 @@ RewriteRule . - [F]
     php_value max_input_vars 3000
     php_flag display_errors Off
     php_flag log_errors On
-    php_value error_log logs/php_error.log
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_vars 3000
+    php_flag display_errors Off
+    php_flag log_errors On
 </IfModule>
